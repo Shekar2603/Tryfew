@@ -1,18 +1,79 @@
 import { StyleSheet, Text, View , TouchableOpacity, Pressable , ScrollView } from 'react-native'
-import React from 'react';
+import React , {useState , useEffect}  from 'react';
 import { reusableStyles } from '../../utils/GlobalStyles';
 import { useNavigation } from '@react-navigation/native';
 // import { Ionicons } from '@expo/vector-icons';
 import { ColorsTheme } from '../../utils/ColorsTheme';
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LottieView from 'lottie-react-native';
 import LeftIcon from '../../assets/svgs/left-arrow.svg'
+
 
 
 
 const TransactionHistory = () => {
 
     const navigation = useNavigation();
+    const apiUrl = 'https://www.tryfew.in/try-few-v1/public/'
+
+    const [userToken , setUserToken] = useState('');
+    const [transactionsFetched , setTransactionsFetched] = useState([])
+
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+          getUserDetails();
+        });
+    
+        return unsubscribe;
+      }, [navigation]);
+
+
+    const getUserDetails = async () => {
+      const response = await AsyncStorage.getItem('userInfo');
+      const userParse = JSON.parse(response);
+      setUserToken(userParse);
+      userDetailsFetch(userParse)
+    };
+
+    const userDetailsFetch = async (tokedIn) => {
+        try {
+            await fetch(`${apiUrl}api/captain/wallet/transactions`, {
+                method: 'GET',
+                mode: 'no-cors',
+                headers: {
+                    "Authorization": "Bearer " + tokedIn,
+                    "token": 'Bearer ' + tokedIn,
+                    "Content-type": "application/json"
+                }
+            })
+            .then((response) => response.json())
+            .then(response => {
+                if(response) {
+                  console.log(response)
+                  setTransactionsFetched(response?.transactions);
+                }
+            })  
+            .catch((error) => {
+                console.error(error, "error");
+                throw Error(error);
+            });
+      
+          } catch (error) {
+            console.log(error , 'errors')
+          }
+      }
+
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+      
+        // Extract day, month, and year
+        const day = date.getDate().toString().padStart(2, "0"); // Ensure 2 digits
+        const month = date.toLocaleString("default", { month: "short" }); // Short month name
+        const year = date.getFullYear();
+      
+        return `${day} ${month} ${year}`;
+      };
 
 
     const styles = StyleSheet.create({
@@ -36,7 +97,7 @@ const TransactionHistory = () => {
         middleTextOuter:{
             flexDirection: "row",
             justifyContent: 'space-between',
-            marginBottom: 10
+            marginTop: 10
         },
         lastTransact:{ 
             flexDirection: "row",
@@ -59,8 +120,8 @@ const TransactionHistory = () => {
 
         },
         rigthpartText: {
-            fontFamily: 'Manrope_600SemiBold',
-            fontSize: 14
+            fontFamily: 'Manrope-Regular',
+            fontSize: 16
         },
         sortbuttons: {
             fontFamily: 'Manrope_700Bold',
@@ -94,6 +155,46 @@ const TransactionHistory = () => {
         outerTransactionsSec: {
             flexDirection: 'column',
             gap: 20
+        },
+        WalletAmountDisplay: {
+            fontSize: 24,
+            fontFamily: 'Manrope-Bold',
+            color: ColorsTheme.Black
+        },
+        successBand: {
+            backgroundColor: "#0f9d58",
+            paddingVertical: 4,
+            paddingHorizontal: 10,
+            borderRadius: 20,
+            color: ColorsTheme.White,
+            position: 'absolute',
+            top: 15,
+            right: 15,
+            fontFamily: 'Manrope-SemiBold'
+        },
+        createdDate: {
+            color: ColorsTheme.Primary,
+            fontFamily: 'Manrope-Bold'
+        },
+        noTransText: {
+            fontFamily: 'Manrope-SemiBold',
+            color: ColorsTheme.Black,
+            textAlign: 'center',
+            fontSize: 18
+        },
+        addMoneyBtn: {
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderRadius: 12,
+            backgroundColor: ColorsTheme.Primary,
+            width: '100%',
+            marginTop: 60,
+        },
+        addMoneyBtnText: {
+            textAlign: 'center',
+            fontSize: 20,
+            fontFamily: 'Manrope-Bold',
+            color: ColorsTheme.White
         }
         
 
@@ -151,35 +252,54 @@ const TransactionHistory = () => {
         </View>
         <ScrollView style={styles.mainScrollerTransaction}>
             <View style={styles.innerScrollViewTransact}>
-                <View style={styles.topSorters}>
+                {/* <View style={styles.topSorters}>
                     <TouchableOpacity><Text style={styles.sortbuttons}>Sort A-Z</Text></TouchableOpacity>
                     <TouchableOpacity><Text style={styles.sortbuttons}>Sort By Date</Text></TouchableOpacity>
-                </View>
+                </View> */}
                 <View style={styles.outerTransactionsSec}>
-                    {transactionData.map((items , index) => {
+                    {transactionsFetched && transactionsFetched?.length > 0 ? transactionsFetched.map((items , index) => {
                         return (
                         <View style={styles.singleTransact} key={index}>
-                            <View style={styles.topTextSec}>
+                            {/* <View style={styles.topTextSec}>
                                 <Text style={styles.mainServiceText}>{items.serviceTitle}</Text>
                                 <Text style={styles.mainServiceDate}>{items.serviceDate}</Text>
+                            </View> */}
+                            <View>
+                                <Text style={styles.WalletAmountDisplay}>Rs. {items?.amount}</Text>
                             </View>
                             <View style={styles.middleTextOuter}>
-                                <View style={styles.middleInner}>
-                                    <Text style={styles.leftpartText}>Status</Text>
-                                    <Text style={[styles.rigthpartText , {color: items.status === 'Success' ? ColorsTheme.green : ColorsTheme.Red}]}>{items.status}</Text>
-                                </View>
-                                <View style={styles.middleInner2}>
+                                <Text style={[styles.rigthpartText , {color: items?.transaction_type === 'credit' ? ColorsTheme.green : ColorsTheme.Red}]}>{items?.transaction_type}</Text>
+                                {/* <View style={styles.middleInner2}>
                                     <Text style={styles.leftpartText}>Amount</Text>
                                     <Text style={[styles.rigthpartText , {color: items.status === 'Success' ? ColorsTheme.darakBlue : ColorsTheme.Red}]}>{items.amount}</Text>
-                                </View>
+                                </View> */}
+                                <Text style={styles.createdDate}>{formatDate(items?.created_at)}</Text>
                             </View>
-                            <View style={styles.lastTransact}>
+                            {/* <View style={styles.lastTransact}>
                                 <Text style={styles.leftpartText}>Location</Text>
                                 <Text style={[styles.rigthpartText , {color: ColorsTheme.darakBlue}]}>{items.location}</Text>
-                            </View>
+                            </View> */}
+                            <Text style={styles.successBand}>Success</Text>
                         </View>
                         )
-                    })}
+                    }) : 
+                    <View>
+                        <LottieView 
+                            source={require('../../assets/animations/astro.json')}
+                            autoPlay
+                            style={{
+                                width: 320,
+                                height: 320,
+                                marginLeft: 'auto',
+                                marginRight: 'auto'
+                            }}
+                        />
+                        <Text style={styles.noTransText}>No Transactions Found On Your Account</Text>
+                        <TouchableOpacity style={styles.addMoneyBtn} onPress={() => navigation.navigate('WalletScreen')}>
+                            <Text style={styles.addMoneyBtnText}>Add Money ?</Text>
+                        </TouchableOpacity>
+                    </View>
+                    }
                 </View>
             </View>
         </ScrollView>

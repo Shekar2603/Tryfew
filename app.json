@@ -2,8 +2,8 @@
     "name": "tryfew",
     "displayName": "Try Few",
     "android": {
-        "versionCode": 1,  
-        "versionName": "1.0" ,
+        "versionCode": 3,  
+        "versionName": "1.3",  
         "package": "com.newtryfewservices"
     }
 }

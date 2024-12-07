@@ -26,7 +26,8 @@ import LottieView from "lottie-react-native";
 // Svg Images Import
 import EyeSlash from '../../assets/svgs/eye-slash.svg';
 import EyeOpen from '../../assets/svgs/eye-open.svg';
-import ChveronLeft from '../../assets/svgs/left-arrow.svg'
+// import ChveronLeft from '../../assets/svgs/left-arrow.svg';
+import ChevronLeft from '../../assets/svgs/orange-left-chevron.svg';
 
 export default function Register() {
 
@@ -152,17 +153,35 @@ export default function Register() {
         width: 100,
         objectFit: "contain",
         height: 100,
+        marginLeft: 'auto'
+      },
+      topLogoBtnOuter :{
+          width: 140,
+          marginLeft: 'auto'
       },
       TopLogo: {
-      //   position: "absolute",
-      //   top: 30,
-      //   left: 10,
-      //   zIndex: 9,
-      paddingLeft: 15,
-      paddingTop: 15,
-      flexDirection: 'row',
-      justifyContent: "space-between",
-      paddingRight: 20
+          paddingHorizontal: 15,
+          paddingTop: 15,
+          flexDirection:"row",
+          justifyContent: "space-between",
+          alignItems: "center"
+      },
+      backTextReg: {
+          fontFamily: 'Manrope-Bold',
+          color: ColorsTheme.Black,
+          fontSize: 14
+      },
+      loginBack: {
+          backgroundColor: ColorsTheme.White,
+          borderRadius: 20,
+          elevation: 8,
+          flexDirection: "row",
+          alignItems:'center',
+          gap: 10,
+          paddingVertical: 5,
+          paddingHorizontal: 15,
+          borderColor: ColorsTheme.borderColor,
+          borderWidth: 1
       },
       loginputs: {
           backgroundColor: ColorsTheme.inputBack,
@@ -325,11 +344,13 @@ export default function Register() {
             <Image source={ImagesThemes.WelcomeBg} style={styles.welcomeBgImage} />
         </View>
         <View style={styles.TopLogo}>
-            <TouchableOpacity style={styles.topLogoBtnOuter} onPress={() => navigation.navigate('WelcomeScreen')}><Image source={ImagesThemes.logo} style={styles.topLogoImage}/></TouchableOpacity>
-            {/* <TouchableOpacity style={styles.backButtonOuter}>
-                    <ChveronLeft/>
-                    <Text style={styles.backText}>Back</Text>
-            </TouchableOpacity> */}
+            <TouchableOpacity style={styles.loginBack} onPress={() => navigation.navigate('WelcomeScreen')}>
+                <ChevronLeft/>
+                <Text style={styles.backTextReg}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.topLogoBtnOuter} >
+                <Image source={ImagesThemes.logo} style={styles.topLogoImage}/>
+            </TouchableOpacity>
         </View>
         <ScrollView style={styles.scrollViewSec}>
             <View style={styles.topHelloThere}>

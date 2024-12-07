@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Keyboard, TextInput ,ActivityIndicator, TouchableOpacity, ToastAndroid, Pressable, Image , ScrollView} from 'react-native'
+import { StyleSheet, Text, View, Keyboard, TextInput , TouchableOpacity, ToastAndroid, Pressable, Image , ScrollView,  ActivityIndicator} from 'react-native'
 import React, {useState , useEffect} from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { ColorsTheme } from '../../utils/ColorsTheme';
@@ -6,29 +6,44 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagesThemes from '../../utils/ImagesTheme';
 import { signinschema } from './Validation';
 import { Formik } from 'formik';
-
+import Modal from "react-native-modal";
 // Svg Images Import
 import EyeSlash from '../../assets/svgs/eye-slash.svg';
 import EyeOpen from '../../assets/svgs/eye-open.svg';
-
+import ChevronLeft from '../../assets/svgs/orange-left-chevron.svg';
 
 
 
 
 export default function Login() {
   const [isActive, setIsActive] = useState(false);
-//   const [isKeyboardVisible ,  setIsKeyboardVisible] = useState(false)
+//  const [isKeyboardVisible ,  setIsKeyboardVisible] = useState(false)
   const [userToken , setUserToken] = useState('');
+  const [userLogData , setUserLogData] = useState('')
+  const [loaderVisible , setLoaderVisible] = useState(false);
   const navigation = useNavigation();
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getUserDetails() 
+            checkLoggedUserLogin()
+        });
+
+        return unsubscribe;
+    }, [navigation]);
+
 
 
   const getUserDetails = async () => {
     const response = await AsyncStorage.getItem('userInfo');
+    const userLog = await AsyncStorage.getItem('loggedData');
     const userParse = JSON.parse(response);
+    const userLogParse = JSON.parse(userLog);
+    setUserLogData(userLogParse);
     setUserToken(userParse);
   };
 
-//   console.log(userToken , "usertoken")
+  console.log(userLogData , "usertoken")
 
   const signindata = {
     email: "",
@@ -37,19 +52,17 @@ export default function Login() {
 
   const apiUrl = 'https://www.tryfew.in/try-few-v1/public/'
 
-
-
     
-  const userLogin = async (values , {resetForm}) => {
+const userLogin = async (values , {resetForm}) => {
      
-      const formData = new FormData()
-      formData.append('email' , values.email);
-      formData.append('password', values.password);
+    const formData = new FormData()
+    formData.append('email' , values.email);
+    formData.append('password', values.password);
 
-      console.log(formData)
+    console.log(formData)
 
-    // setLoaderVisible(true)
-      try {
+    setLoaderVisible(true)
+    try {
         await fetch(`${apiUrl}api/captain/login`, {
             method: 'post',  
             body: formData,
@@ -57,56 +70,79 @@ export default function Login() {
         .then((response) => response.json())
         .then(response => {
             console.log(response)
+
             if(response?.data?.token) {
+                setLoaderVisible(false)
                 AsyncStorage.setItem('userInfo', JSON.stringify(response?.data?.token));
                 AsyncStorage.setItem('loggedData' , JSON.stringify(response?.data))
                 if(response?.data?.tell_me_about_yourself === true) {
-                   navigation.navigate('HomePage') 
+                    navigation.navigate('HomePage') 
                 }else {
                     navigation.navigate('TermsConditions')
                 }
                 ToastAndroid.show('Logged in successfully' , ToastAndroid.LONG);
-            }else if (response?.data?.error) {
+            }
+            else if (response?.success == false) {
+                setLoaderVisible(false)
+                ToastAndroid.show('Invalid Credentials' , ToastAndroid.LONG);
+            }
+            else if (response?.data?.error) {
+                setLoaderVisible(false)
                 ToastAndroid.show('Invalid Credentials' , ToastAndroid.LONG);
             }
             else if(response?.errors) {
+                setLoaderVisible(false)
                 ToastAndroid.show('Invalid Credentials', ToastAndroid.LONG);
             }  
         })  
         .catch((error) => {
+            setLoaderVisible(false)
             console.error(error, "error");
             throw Error(error);
         });
- 
+
+    } catch (error) {
+    console.log(error , 'errors')
+    }
+
+};
+
+
+const checkLoggedUserLogin = async () => {
+    setLoaderVisible(true)
+    try {
+        const userLog = await AsyncStorage.getItem('loggedData');
+        if (userLog) {
+          const userLogParse = JSON.parse(userLog);
+          if (userLogParse.token && userLogParse.tell_me_about_yourself === true) {
+            setLoaderVisible(false)
+            ToastAndroid.show('Logged in successfully' , ToastAndroid.LONG);
+            navigation.navigate('HomePage');
+          } else if(userLogParse.token && userLogParse.tell_me_about_yourself === false) {
+            setLoaderVisible(false)
+            ToastAndroid.show('Fill Details Form Up Next' , ToastAndroid.LONG);
+            navigation.navigate('TermsConditions'); 
+          } else {
+            setLoaderVisible(false)
+            ToastAndroid.show('Login in Again' , ToastAndroid.LONG);
+            navigation.navigate('Login'); 
+          }
+        } else {
+            setLoaderVisible(false)
+            ToastAndroid.show('Error Logging you In , Login Again' , ToastAndroid.LONG);
+            navigation.navigate('Login');
+        }
       } catch (error) {
-        console.log(error , 'errors')
+        setLoaderVisible(false)
+        console.error("Error fetching user data:", error);
+        navigation.navigate('Login');
       }
-      
-
-    };
-
-
-
+}
   
-  useEffect (() => {
-    getUserDetails()
-    // const keyboardDidShowListener = Keyboard.addListener(
-    //     'keyboardDidShow',
-    //     () => {
-    //         setIsKeyboardVisible(true)
-    //     }
-    // );
-    // const keyboardDidHideListner = Keyboard.addListener(
-    //     'keyboardDidHide',
-    //     () => {
-    //         setIsKeyboardVisible(false)
-    //     }
-    // );
-    // return () => {
-    //     keyboardDidShowListener.remove();
-    //     keyboardDidHideListner.remove();
-    // }
-}, [])
+
+
+
+
 
   const styles = StyleSheet.create({
     bottomAlready: {
@@ -121,6 +157,23 @@ export default function Login() {
         width: '100%',
         backgroundColor: ColorsTheme.White ,
         paddingVertical: 15
+    },
+    innerModal:{
+        backgroundColor: ColorsTheme.White,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderRadius: 10
+    },
+    innerLoading: {
+        flexDirection: 'row',
+        alignItems: "center",
+        gap: 20
+    },
+    accountReg: {
+        color: ColorsTheme.Black,
+        fontSize: 18,
+        fontFamily: 'Manrope-Bold'
+
     },
     loginbuttontext: {
       color: ColorsTheme.Primary,
@@ -150,17 +203,35 @@ export default function Login() {
       width: 100,
       objectFit: "contain",
       height: 100,
+      marginLeft: 'auto'
     },
     topLogoBtnOuter :{
-        width: 140
+        width: 140,
+        marginLeft: 'auto'
     },
     TopLogo: {
-    //   position: "absolute",
-    //   top: 30,
-    //   left: 10,
-    //   zIndex: 9,
-    paddingHorizontal: 15,
-    paddingTop: 15
+        paddingHorizontal: 15,
+        paddingTop: 15,
+        flexDirection:"row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    backText: {
+        fontFamily: 'Manrope-Bold',
+        color: ColorsTheme.Black,
+        fontSize: 14
+    },
+    loginBack: {
+        backgroundColor: ColorsTheme.White,
+        borderRadius: 20,
+        elevation: 8,
+        flexDirection: "row",
+        alignItems:'center',
+        gap: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 15,
+        borderColor: ColorsTheme.borderColor,
+        borderWidth: 1
     },
     loginputs: {
         backgroundColor: ColorsTheme.inputBack,
@@ -275,11 +346,23 @@ export default function Login() {
             <Image source={ImagesThemes.WelcomeBg} style={styles.welcomeBgImage} />
         </View>
         <View style={styles.TopLogo}>
-            <TouchableOpacity style={styles.topLogoBtnOuter} onPress={() => navigation.navigate('WelcomeScreen')}>
+            <TouchableOpacity style={styles.loginBack} onPress={() => navigation.navigate('WelcomeScreen')}>
+                <ChevronLeft/>
+                <Text style={styles.backText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.topLogoBtnOuter} >
                 <Image source={ImagesThemes.logo} style={styles.topLogoImage}/>
             </TouchableOpacity>
         </View>
         <ScrollView style={styles.scrollViewSec}>
+            <Modal isVisible={loaderVisible}>
+                <View style={styles.innerModal}>
+                    <View style={styles.innerLoading}>
+                        <ActivityIndicator size={'large'} color={ColorsTheme.Primary}/>
+                        <Text style={styles.accountReg}>Please Wait</Text>
+                    </View>
+                </View>
+            </Modal>
             <View style={styles.topHelloThere}>
                 <Text style={[styles.singinHello , {color: ColorsTheme.Primary}]}>hello</Text>
                 <Text style={[styles.singinHello , {color: ColorsTheme.Black}]}>there !</Text>

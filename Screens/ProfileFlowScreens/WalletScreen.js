@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View , Image , Pressable , ScrollView , TouchableOpacity , TextInput, Keyboard, ToastAndroid} from 'react-native'
+import { StyleSheet, Text, View , Image , Pressable , ScrollView , TouchableOpacity , TextInput, Keyboard, ToastAndroid , ActivityIndicator} from 'react-native'
 import React , {useState ,  useEffect} from 'react';
 import ImagesThemes from '../../utils/ImagesTheme';
 import { ColorsTheme } from '../../utils/ColorsTheme';
@@ -28,9 +28,6 @@ const WalletScreen = ({route}) => {
     
     const apiUrl = 'https://www.tryfew.in/try-few-v1/public/'
 
-    const razrPaySecret = '21dmjN82KJdVDRfOKSYdGz74';
-    const razrPayId = 'rzp_test_NrmnTaCArHcop0'
-
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -44,15 +41,18 @@ const WalletScreen = ({route}) => {
     const [isModalVisible , setModalVisible] = useState(false);
 
     const [isSuccessVisible ,  setIsSuccessVisible] = useState(false);
+    const [razAmount ,  setRazAmount] = useState();
+    const [paymentLoader ,  setPaymentLoader] = useState(false)
 
     const [activePackage , setActivePackage] = useState({
-        title: '₹ 450',
-        validity: 'Year'
+        title: '₹ 299',
+        validity: '1 Month',
+        amount: 299
     },)
 
 
     const [userToken , setUserToken] = useState('');
-    const [fetchedUserData , setFetchedUserData] = useState()
+    const [fetchedUserData , setFetchedUserData] = useState({})
 
     const getUserDetails = async () => {
       const response = await AsyncStorage.getItem('userInfo');
@@ -63,7 +63,7 @@ const WalletScreen = ({route}) => {
 
 
     const userDetailsFetch = async (tokedIn) => {
-
+        setPaymentLoader(true)
       try {
           await fetch(`${apiUrl}api/captain/get-details`, {
               method: 'GET',
@@ -77,181 +77,294 @@ const WalletScreen = ({route}) => {
           .then((response) => response.json())
           .then(response => {
               if(response) {
+                // console.log(response)
+                setPaymentLoader(false)
                 setFetchedUserData(response?.data);
               }
           })  
           .catch((error) => {
+            setPaymentLoader(false)
               console.error(error, "error");
               throw Error(error);
           });
     
         } catch (error) {
+            setPaymentLoader(false)
           console.log(error , 'errors')
         }
     }
 
+    // const handleAddWalletAmt = (values) => {
+    //     const numericValue = Number(values.amount)
+    //     console.log(numericValue)
+    //     if(numericValue === 430) {
+    //         setModalVisible(true)
+    //     }else {
+    //         setAddMoneyVisible(true)
+    //         ToastAndroid.show('You need to add minimum Rs.430' , ToastAndroid.LONG);
+    //         setModalVisible(false)
+    //     }
+    // }
+
+    console.log(fetchedUserData, "fetched")
+
     const amountPackages = [
         {
-            title: '₹ 450',
-            validity: 'Year'
+            title: '₹ 299',
+            validity: '1 Month',
+            amount: 299
         },
         {
-            title: '₹ 900',
-            validity: '2 Years'
+            title: '₹ 599',
+            validity: '2 Months (56days) + 28days Free',
+            amount: 599
         },
         {
-            title: '₹ 1800',
-            validity: '4 Years'
+            title: '₹ 999',
+            validity: '3 Months (84days) + 84days Free ',
+            amount: 999
         },
     ]
-
-
-
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
 
-      
-    const walletDetails = {
-        amount: ''     
-      };
 
-      const handleAddWalletAmt = (values) => {
-        const numericValue = Number(values.amount)
-        console.log(numericValue)
-        if(numericValue === 430) {
-            setModalVisible(true)
-        }else {
-            setAddMoneyVisible(true)
-            ToastAndroid.show('You need to add minimum Rs.430' , ToastAndroid.LONG);
-            setModalVisible(false)
+    const createOrderHandler = async() => {
+        const obj = {
+            amount: activePackage?.amount
         }
-      }
+        console.log(obj , userToken ,"sjfvbhshj")
+        setPaymentLoader(true)
+        try {
+            await fetch(`${apiUrl}api/captain/razorpay/create-order`, {
+                method: 'post',  
+                body: JSON.stringify(obj),
+                headers: {
+                    "Authorization": "Bearer " + userToken,
+                    "token": 'Bearer ' + userToken,
+                    "Content-type": "application/json"
+                }
+            })
+            .then((response) => response.json())
+            .then(response => {
+                console.log(response)
+                if(response?.success == true || response?.order_id) {
+                    setPaymentLoader(false)
+                    initiatePayment(activePackage?.amount , response?.key , response?.order_id)
+                }
+            })  
+            .catch((error) => {
+                setPaymentLoader(false)
+                console.error(error, "error");
+                throw Error(error);
+            });
+        
+        } catch (error) {
+            console.log(error , 'errors')
+        }
+          
+    }
 
+    const initiatePayment = (amount, razorKey, orderId) => {
+        console.log(amount, razorKey, orderId)
+        const options = {
+        //   razorKey,
+          key: razorKey,
+          amount: amount * 100, 
+          currency: 'INR',
+          name: 'Try Few',
+          description: 'Payment for your order',
+          order_id: orderId, 
+          prefill: {
+            email: 'sg83362@gmail.com', 
+            contact: '9030598490', 
+            name: 'Sreedhar P', 
+          },
+          theme: {
+            color: '#3399cc',
+          },
+        };
+    
+        RazorpayCheckout.open(options).then((data) => {
+            // console.log(data , 'pay')
+            // alert(`Your Payment is Success: ${data?.razorpay_payment_id}`);
+            walletVerifier(data ,amount)
+            setIsSuccessVisible(true)
+            setRazAmount(amount)
 
-      const initiatePayment = () => {
-        var options = {
-            description: 'Credits towards consultation',
-            image: LogoRazr,
-            currency: 'INR',
-            key: razrPayId,
-            amount: '5000',
-            name: 'Acme Corp',
-            order_id: 'order_DslnoIgkIDL8Zt',//Replace this with an order_id created using Orders API.
-            prefill: {
-              email: 'sg83362@gmail.com',
-              contact: '9191919191',
-              name: 'Gaurav Kumar'
-            },
-            theme: {color: '#53a20e'}
-          }
-          RazorpayCheckout.open(options).then((data) => {
-            // handle success
-            alert(`Success: ${data.razorpay_payment_id}`);
-          }).catch((error) => {
-            // handle failure
-            alert(`Error: ${error.code} | ${error.description}`);
-          });
-      };
+            }).catch((error) => {
+            ToastAndroid.show('Payment Got Cancelled' , ToastAndroid.LONG);
+            // alert(`Error: ${error.code} | ${error.description}`);
+        });
+    };
+
+    const walletVerifier = async(data , razmount) => {
+
+        // const formData = new FormData()
+        // formData.append('amount' , razmount);
+        // formData.append('razorPaymentId', data.razorpay_payment_id);
+        // formData.append('razorOrderId', data.razorpay_order_id);
+        // formData.append('razorSignature', data.razorpay_signature);
+  
+        // console.log(formData)
+
+        const verifierObj = {
+            amount: razmount,
+            razorPaymentId: data.razorpay_payment_id,
+            razorOrderId: data.razorpay_order_id,
+            razorSignature: data.razorpay_signature,
+            description: null
+        }
+        console.log(verifierObj , "verifier-called")
+        setPaymentLoader(true)
+        try {
+            await fetch(`https://www.tryfew.in/try-few-v1/public/api/captain/wallet/add-money`, {
+                method: 'POST',  
+                body: JSON.stringify(verifierObj),
+                headers: {
+                    "Authorization": "Bearer " + userToken,
+                    "token": 'Bearer ' + userToken,
+                    "Content-type": "application/json",
+                }
+            })
+            .then((response) => response.json())
+            .then(response => {
+                console.log(response)
+                getUserDetails()
+                userDetailsFetch(userToken)
+                setPaymentLoader(false)
+            })  
+            .catch((error) => {
+                setPaymentLoader(false)
+                console.error(error, "error");
+                throw Error(error);
+            });
+        
+        } catch (error) {
+            setPaymentLoader(false)
+            console.log(error , 'errors')
+        }
+    }
 
     
-      const styles = StyleSheet.create({
+
+    console.log('razAmount' , razAmount)
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+      
+        // Extract day, month, and year
+        const day = date.getDate().toString().padStart(2, "0"); // Ensure 2 digits
+        const month = date.toLocaleString("default", { month: "short" }); // Short month name
+        const year = date.getFullYear();
+      
+        return `${day} ${month} ${year}`;
+      };
+
+
+    
+    const styles = StyleSheet.create({
         mainProfileContainer: {
-          flex: 1,
-          // position: 'relative'
-          backgroundColor: ColorsTheme.White
+            flex: 1,
+            // position: 'relative'
+            backgroundColor: ColorsTheme.White
         },
+        modalCloser: {
+            width: 20,
+            height: 20
+        },  
         TopProfileDisplay: {
-          // position: 'absolute',
-          // top: 0,
-          backgroundColor: ColorsTheme.Primary,
-          borderBottomLeftRadius:30,
-          borderBottomRightRadius:30,
-          width:'100%',
-          paddingTop: 15,
-          paddingBottom: 40
+            // position: 'absolute',
+            // top: 0,
+            backgroundColor: ColorsTheme.Primary,
+            borderBottomLeftRadius:30,
+            borderBottomRightRadius:30,
+            width:'100%',
+            paddingTop: 15,
+            paddingBottom: 40
         },
         profileImageTop: {
-          width: 100,
-          height: 100,
-          borderRadius: 100,
-          borderWidth: 2,
-          borderColor:  ColorsTheme.White
+            width: 100,
+            height: 100,
+            borderRadius: 100,
+            borderWidth: 2,
+            borderColor:  ColorsTheme.White
         },
         profileHead: {
-          fontSize: 16,
-          fontFamily: 'Manrope-SemiBold',
-          paddingVertical: 15,
-          textAlign: "center",
-          color: ColorsTheme.White,
-          width:'80%'
+            fontSize: 16,
+            fontFamily: 'Manrope-SemiBold',
+            paddingVertical: 15,
+            textAlign: "center",
+            color: ColorsTheme.White,
+            width:'80%'
         },
         imageSectionProfile: {
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: 20
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: 20
         },
         nameSec: {
-          fontSize: 16,
-          fontFamily: 'Manrope-SemiBold',
-          color: ColorsTheme.White,
-          textAlign: 'center',
-          marginTop: 10
+            fontSize: 16,
+            fontFamily: 'Manrope-SemiBold',
+            color: ColorsTheme.White,
+            textAlign: 'center',
+            marginTop: 10
         },
         wallamtSec: {
-          fontSize: 20,
-          fontFamily: 'Manrope-Bold',
-          color: ColorsTheme.White,
-          marginTop: 5
+            fontSize: 20,
+            fontFamily: 'Manrope-Bold',
+            color: ColorsTheme.White,
+            marginTop: 5
         },
         innerScrollerProfile: {
-          paddingHorizontal: 15,
-          flexDirection: 'column',
-          gap: 15,
-          paddingVertical: 20
+            paddingHorizontal: 15,
+            flexDirection: 'column',
+            gap: 15,
+            paddingVertical: 20
         },
         singleMenuItemOuter: {
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: ColorsTheme.inputBack,
-          paddingHorizontal: 15,
-          paddingVertical: 10,
-          borderRadius: 15
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: ColorsTheme.inputBack,
+            paddingHorizontal: 15,
+            paddingVertical: 10,
+            borderRadius: 15
         },
         iconNameOut: {
-          flexDirection: "row",
-          gap: 10,
-          alignItems: "center"
+            flexDirection: "row",
+            gap: 10,
+            alignItems: "center"
         },
         iconsLeft: {
-          fontSize: 25,
-    
+            fontSize: 25,
+
         },
         menuTextName: {
-          fontFamily: 'Manrope-Regular',
-          fontSize: 18,
-    
+            fontFamily: 'Manrope-Regular',
+            fontSize: 18,
+
         },
         nextIcon: {
-          fontSize: 20
+            fontSize: 20
         },
         IconOuter: {
-          width: 50,
-          height: 50,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: ColorsTheme.White,
-          borderRadius: 50
+            width: 50,
+            height: 50,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: ColorsTheme.White,
+            borderRadius: 50
         },
         nextIconTextComb: {
-          flexDirection: 'row',
-          gap: 5
+            flexDirection: 'row',
+            gap: 5
         },
         nextAmount: {
-          fontFamily: 'Manrope-Bold'
+            fontFamily: 'Manrope-Bold'
         },
         profileBackOuter: {
             flexDirection: "row",
@@ -283,7 +396,7 @@ const WalletScreen = ({route}) => {
         },
         passwordinputrow: {
             position: "relative",
-    
+
         },
         mailIcon: {
             width: 24,
@@ -346,7 +459,10 @@ const WalletScreen = ({route}) => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: 10
+            borderTopRightRadius: 10,
+            borderTopLeftRadius: 10,
+            borderBottomRightRadius: 15,
+            borderBottomLeftRadius: 15,
         },
         signinnertwo: {
             fontSize: 18,
@@ -459,10 +575,11 @@ const WalletScreen = ({route}) => {
             marginRight: 'auto'
         },
         WalletSucAmt: {
-            fontFamily: 'Manrope-SemiBold',
+            fontFamily: 'Manrope-Bold',
             fontSize: 30,
             textAlign: "center",
             marginTop: 20,
+            marginBottom: 10,
             color: ColorsTheme.Black
         },
         groupWalletSelectors: {
@@ -494,7 +611,8 @@ const WalletScreen = ({route}) => {
         planText: {
             fontSize: 14,
             fontFamily: 'Manrope-Semibold',
-            marginTop: 5
+            marginTop: 5,
+            width: '65%'
         },
         selectedPlan: {
             fontSize: 14,
@@ -505,10 +623,27 @@ const WalletScreen = ({route}) => {
         boldText: {
             fontFamily: "Manrope-ExtraBold",
             color: ColorsTheme.Black
-        }
+        },    
+        innerModal:{
+            backgroundColor: ColorsTheme.White,
+            paddingHorizontal: 20,
+            paddingVertical: 20,
+            borderRadius: 10
+        },
+        innerLoading: {
+            flexDirection: 'row',
+            alignItems: "center",
+            gap: 20
+        },
+        accountReg: {
+            color: ColorsTheme.Black,
+            fontSize: 18,
+            fontFamily: 'Manrope-Bold'
+    
+        },
         
 
-      })
+    })
     
       return (
         <View style={styles.mainProfileContainer}>
@@ -523,11 +658,13 @@ const WalletScreen = ({route}) => {
                 <View style={styles.ProfileimageIconer}>
                     <Image source={{uri: apiUrl + fetchedUserData?.profile_img}} style={styles.profileImageTop}/>
                     <Text style={styles.nameSec}>{fetchedUserData?.name}</Text>
+                    {/* <Text style={styles.nameSec}>{fetchedUserData?.email}</Text> */}
                 </View>
               </View>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.innerScrollerProfile}>
+
                 <Modal isVisible={isModalVisible}>
                     <View style={styles.modalSectionOuter2}>
                         <View style={styles.modalCloseAbs}>
@@ -549,7 +686,7 @@ const WalletScreen = ({route}) => {
                             />
                             <Text style={styles.successModalHeader}>Payment Success</Text>
                             <Text style={styles.SuccesswalletInputText}>Your money has been successfully added to the walley</Text>    
-                            <Text style={styles.WalletSucAmt}>₹430</Text>
+                            <Text style={styles.WalletSucAmt}>₹{activePackage?.amount}</Text>
                             <View style={styles.submitbtn2}>
                                 {/* <TouchableOpacity style={styles.signinbtn} onPress={initiatePayment}>
                                     <Text style={styles.signinnertwo}>Okay Lets Go</Text>
@@ -580,9 +717,9 @@ const WalletScreen = ({route}) => {
                             <Text style={styles.selectedPlan}>
                                 <Text style={styles.boldText}>Note:</Text> You have Selected {activePackage?.title} Plan which is valid for an {activePackage?.validity}.
                             </Text>
-                            <Text style={styles.walletInputText2}>We are using razorpay payment gateway. it will take 2-3 minutes to update the wallet balance , please bear with us. Thankyou for your patience</Text>    
+                            <Text style={styles.walletInputText2}>50% Cashback Guarantee . We are using razorpay payment gateway. it will take 2-3 minutes to update the wallet balance , Terms & Conditions Apply</Text>    
                             <View style={styles.submitbtn}>
-                                <TouchableOpacity style={styles.signinbtn} onPress={initiatePayment}>
+                                <TouchableOpacity style={styles.signinbtn} onPress={createOrderHandler}>
                                     <Text style={styles.signinnertwo}>Add Money</Text>
                                 </TouchableOpacity>      
                                 {/* <TouchableOpacity style={styles.signinbtn} onPress={() => setIsSuccessVisible(true)}>
@@ -593,20 +730,31 @@ const WalletScreen = ({route}) => {
                          }
                     </View>
                 </Modal>
+                <Modal isVisible={paymentLoader}>
+                    <View style={styles.innerModal}>
+                        <View style={styles.innerLoading}>
+                            <ActivityIndicator size={'large'} color={ColorsTheme.Primary}/>
+                            <Text style={styles.accountReg}>Please Wait</Text>
+                        </View>
+                    </View>
+                </Modal>
                 <Text style={styles.walletBalHead}>Wallet Balance</Text>
-                <Text style={styles.walletBalText}>Rs. 430.70</Text>
+                <Text style={styles.walletBalText}>Rs. {fetchedUserData?.wallet?.balance ? fetchedUserData?.wallet?.balance : '0.00'}</Text>
                 <View style={styles.borderDiver}></View>
                 <View style={styles.lastAddedServSec}>
                     <View style={styles.leftServicesBlk}>
                         <Image source={ImagesThemes.calandarIcon} style={styles.nofServicesicons} />
                         <Text style={styles.noofServTop}>Last Added on</Text>
-                        <Text style={styles.noofServBold}>13 Jul, 2024</Text>
+                        {fetchedUserData?.wallet?.updated_at ? 
+                            <Text style={styles.noofServBold}>{formatDate(fetchedUserData?.wallet?.updated_at)}</Text> : 
+                            <Text style={styles.noofServBold}>Not Yet Added</Text>
+                        }
                     </View>
-                    <View style={styles.leftServicesBlk}>
+                    {/* <View style={styles.leftServicesBlk}>
                         <Image source={ImagesThemes.noServ} style={styles.nofServicesicons} />
-                        <Text style={styles.noofServTop}>No of Services</Text>
-                        <Text style={styles.noofServBold}>13 Services</Text>
-                    </View>
+                        <Text style={styles.noofServTop}>No of Payents</Text>
+                        <Text style={styles.noofServBold}>13 Transactions</Text>
+                    </View> */}
                 </View>
 
                 <View style={styles.submitbtn}>

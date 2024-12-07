@@ -333,7 +333,7 @@ export default function VerifyOtp({route}) {
                                 marginRight: 'auto'
                             }}
                         />
-                        <Text style={styles.accountReg}>Account Registered Successfully</Text>
+                        <Text style={styles.accountReg}>Account Verified Successfully</Text>
                     </View> : 
                     <View style={styles.innerLoading}>
                         <ActivityIndicator size={'large'} color={ColorsTheme.Primary}/>

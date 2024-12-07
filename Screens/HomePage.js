@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image , TouchableOpacity,  Pressable, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Image , TouchableOpacity,  Pressable, ScrollView, ActivityIndicator } from 'react-native'
 import React , {useState ,  useEffect} from 'react'
 import {  useNavigation } from '@react-navigation/native'
 import { ColorsTheme } from '../utils/ColorsTheme';
@@ -6,7 +6,7 @@ import ImagesThemes from '../utils/ImagesTheme';
 // import RazorpayCheckout from 'react-native-razorpay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native';
-
+import Modal from "react-native-modal";
 // Svg Images Import
 import Menubar from '../assets/svgs/meun-icon.svg';
 import CloseRemove from '../assets/svgs/close-remove.svg'
@@ -21,6 +21,7 @@ export default function HomePage() {
   const [cateSelect , setCateSelect] = useState('Ac Services');
   const [userToken , setUserToken] = useState('');
   const [fechedUserData , setFetchedUserData] = useState('');
+  const [loader , setLoader] = useState(false);
 
 
   const getUserDetails = async () => {
@@ -39,6 +40,7 @@ const userDetailsFetch = async (tokedIn) => {
   // myHeaders.append("token" , 'Bearer ' + tokedIn)
   // myHeaders.append("Authorization" , 'Bearer ' + tokedIn)
   // myHeaders.append("Content-type" , 'application/json')
+  setLoader(true)
   try {
       // await fetch(`${apiUrl}api/captain/get-details`, {
         await fetch('https://www.tryfew.in/try-few-v1/public/api/captain/get-details', {
@@ -54,16 +56,19 @@ const userDetailsFetch = async (tokedIn) => {
       .then(response => {
         console.log(response)
           if(response) {
+            setLoader(false)
             setFetchedUserData(response?.data)
               // console.log(response);
           }
       })  
       .catch((error) => {
+          setLoader(false)
           console.error(error, "error");
           throw Error(error);
       });
 
     } catch (error) {
+      setLoader(false)
       console.log(error , 'errors')
     }
 }
@@ -165,11 +170,11 @@ const getData = (toked) => {
     },
     {
       leftText: 'Applied On',
-      rightText: 'Jul 14, 2024',
+      rightText: fechedUserData?.created_at ? fechedUserData?.created_at : 'Date Recorded',
     },
     {
       leftText: 'Applied For',
-      rightText: fechedUserData?.service,
+      rightText: fechedUserData?.services?.join(', '),
     },
     {
       leftText: 'KYC Status',
@@ -433,7 +438,8 @@ const getData = (toked) => {
     darkTextRight: {
       fontFamily: "Manrope-SemiBold",
       fontSize: 14,
-      color: ColorsTheme.Black
+      color: ColorsTheme.Black,
+      width: '60%'
     }, 
     detailsCardOut: {
       backgroundColor: ColorsTheme.lightGray,
@@ -631,7 +637,24 @@ const getData = (toked) => {
   },
   profileCardText: {
     color: ColorsTheme.Black
-  }
+  },
+  innerModal:{
+    backgroundColor: ColorsTheme.White,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 10
+},
+innerLoading: {
+    flexDirection: 'row',
+    alignItems: "center",
+    gap: 20
+},
+accountReg: {
+    color: ColorsTheme.Black,
+    fontSize: 18,
+    fontFamily: 'Manrope-Bold'
+
+},
 
 })
 
@@ -672,6 +695,14 @@ const getData = (toked) => {
             </View>
         </View>
         <ScrollView showsVerticalScrollIndicator={false} style={styles.mainScrollerHome}>
+          <Modal isVisible={loader}>
+              <View style={styles.innerModal}>
+                  <View style={styles.innerLoading}>
+                      <ActivityIndicator size={'large'} color={ColorsTheme.Primary}/>
+                      <Text style={styles.accountReg}>Please Wait</Text>
+                  </View>
+              </View>
+          </Modal> 
           <View style={styles.ScrollInner}>
             {homeToggle ? 
             <View>
@@ -700,7 +731,7 @@ const getData = (toked) => {
                       </View>
                       {tabActiver === 'KYC' ? 
                         <View style={styles.uploadphotosOuter}>
-                          <Text style={styles.photoUpHead}>Uploaded Doc -  Pan card</Text>
+                          <Text style={styles.photoUpHead}>Uploaded KYC Doc </Text>
                           <Image source={{uri: apiUrl + fechedUserData?.document_path}} style={styles.panImage}/>
                         </View> : null
                       }

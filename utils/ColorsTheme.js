@@ -11,5 +11,6 @@ export const ColorsTheme = {
     lightGray: '#f6f6f6',
     lightBorder: '#e5e5e5',
     darkGray: '#c0c0c0',
-    darakBlue: '#362b97'
+    darakBlue: '#362b97',
+    green: '#008000'
 }

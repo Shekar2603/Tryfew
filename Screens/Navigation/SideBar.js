@@ -237,13 +237,13 @@ export default function SideBar() {
             name: 'Wallet',
             link: 'WalletScreen',
             icon: ImagesThemes.WalletSideIcon,
-            rightText: '365 RS',
-            rightIcon: false
+            rightText: null,
+            rightIcon: true
         },
         {
-            name: 'Services',
-            link: 'HomePage',
-            icon: ImagesThemes.servicesIcon,
+            name: 'Transactions',
+            link: 'Transactions',
+            icon: ImagesThemes.WalletSideIcon,
             rightText: null,
             rightIcon: true
         },

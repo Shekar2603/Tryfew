@@ -207,7 +207,7 @@ export default function WelcomeScreen() {
             {welcomeCards.map((items , index) => {
                 return (
                     <View style={styles.singleViewCard} key={index}>
-                        <Image source={items.image} resizeMode='cover'/>
+                        <Image source={items.image} style={{width: '100%'}} resizeMode='cover'/>
                         <TouchableOpacity style={styles.bottomCardDet} onPress={() => navigation.navigate('Login')}>
                             <View style={styles.cardTextOut}>
                                 <Text style={styles.primaryOrangeText}>{items.primaryText}</Text>

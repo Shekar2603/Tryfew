@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View , Image , Pressable , ScrollView , TouchableOpacity} from 'react-native'
+import { StyleSheet, Text, View , Image , Pressable , ScrollView , TouchableOpacity , ActivityIndicator} from 'react-native'
 import React , {useState ,  useEffect} from 'react';
 import ImagesThemes from '../../utils/ImagesTheme';
 import { ColorsTheme } from '../../utils/ColorsTheme';
@@ -12,7 +12,7 @@ import ServicesIcon from '../../assets/svgs/services-icon.svg';
 import LogoutIcon from '../../assets/svgs/logout.svg';
 import ChevronRight from '../../assets/svgs/black-right-chevron.svg'
 
-
+import Modal from "react-native-modal";
 import ChevronLeft from '../../assets/svgs/orange-left-chevron.svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -31,20 +31,20 @@ export default function ProfileScreen() {
   const apiUrl = 'https://www.tryfew.in/try-few-v1/public/'
 
   const ProfileNavigatorsList = [
-    {
-      linkName: 'Edit Profile',
-      iconName: ProfileEdit,
-      link: 'ProfileEdit',
-      iconColor: '#fb6f3d',
-      rightIcon: true
-    },
+    // {
+    //   linkName: 'Edit Profile',
+    //   iconName: ProfileEdit,
+    //   link: 'ProfileEdit',
+    //   iconColor: '#fb6f3d',
+    //   rightIcon: true
+    // },
     {
       linkName: 'Wallet',
       iconName: WalletIcon,
       link: 'WalletScreen',
       iconColor: '#18CFE8',
       rightIcon: false,
-      rightAmount: '₹365',
+      // rightAmount: '₹365',
       insideIcon: true
     },
     {
@@ -54,16 +54,17 @@ export default function ProfileScreen() {
       iconColor: '#FF7622',
       rightIcon: true
     },
-    {
-      linkName: 'Number of Services',
-      iconName: ServicesIcon,
-      iconColor: '#18CFE8',
-      rightIcon: false,
-      rightAmount: '34',
-      insideIcon: false
-    },
+    // {
+    //   linkName: 'Number of Services',
+    //   iconName: ServicesIcon,
+    //   iconColor: '#18CFE8',
+    //   rightIcon: false,
+    //   rightAmount: '34',
+    //   insideIcon: false
+    // },
     {
       linkName: 'Log Out',
+      link: 'logout',
       iconName: LogoutIcon,
       iconColor: '#D20F0F',
       rightIcon: false
@@ -76,6 +77,7 @@ export default function ProfileScreen() {
 
   const [userToken , setUserToken] = useState('');
   const [fechedUserData , setFetchedUserData] = useState('');
+  const [loader , setLoader] = useState(false);
 
   
   const getUserDetails = async () => {
@@ -90,7 +92,7 @@ export default function ProfileScreen() {
   
   
 const userDetailsFetch = async (tokedIn) => {
-
+  setLoader(true)
   try {
       await fetch(`${apiUrl}api/captain/get-details`, {
           method: 'GET',
@@ -104,16 +106,19 @@ const userDetailsFetch = async (tokedIn) => {
       .then((response) => response.json())
       .then(response => {
           if(response) {
+            setLoader(false)
             setFetchedUserData(response?.data)
               // console.log(response);
           }
       })  
       .catch((error) => {
+        setLoader(false)
           console.error(error, "error");
           throw Error(error);
       });
 
     } catch (error) {
+      setLoader(false)
       console.log(error , 'errors')
     }
 }
@@ -248,6 +253,23 @@ const userDetailsFetch = async (tokedIn) => {
       borderRadius: 30,
       marginTop: 10
   },
+  innerModal:{
+    backgroundColor: ColorsTheme.White,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 10
+},
+innerLoading: {
+    flexDirection: 'row',
+    alignItems: "center",
+    gap: 20
+},
+accountReg: {
+    color: ColorsTheme.Black,
+    fontSize: 18,
+    fontFamily: 'Manrope-Bold'
+
+},
 
   })
 
@@ -258,19 +280,27 @@ const userDetailsFetch = async (tokedIn) => {
             <TouchableOpacity style={styles.backIcon} onPress={() => navigation.navigate('HomePage')}>
                 <ChevronLeft/>
             </TouchableOpacity>
-            <Text style={styles.profileHead}>Edit Profile</Text>
+            <Text style={styles.profileHead}>Profile</Text>
           </View>
           <View style={styles.imageSectionProfile}>
             <Image source={{uri: apiUrl + fechedUserData?.profile_img}} style={styles.profileImageTop}/>
             <Text style={styles.nameSec}>{fechedUserData?.name}</Text>
-            <Text style={styles.wallamtSec}>₹ 365.00 </Text>
+            {/* <Text style={styles.wallamtSec}>₹ 365.00 </Text> */}
           </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>   
+      <ScrollView showsVerticalScrollIndicator={false}>  
+        <Modal isVisible={loader}>
+            <View style={styles.innerModal}>
+                <View style={styles.innerLoading}>
+                    <ActivityIndicator size={'large'} color={ColorsTheme.Primary}/>
+                    <Text style={styles.accountReg}>Please Wait</Text>
+                </View>
+            </View>
+        </Modal> 
         <View style={styles.innerScrollerProfile}>
           {ProfileNavigatorsList.map((items , index) => {
             return (
-              <TouchableOpacity style={styles.singleMenuItemOuter} key={index} onPress={() => {items.link ? navigation.navigate(items.link , {profileData: fechedUserData}) : handleLogout()}}>
+              <TouchableOpacity style={styles.singleMenuItemOuter} key={index} onPress={() => {items.link == 'logout' ?  handleLogout() : navigation.navigate(items.link)}}>
                   <View style={styles.iconNameOut}>
                     <View style={styles.IconOuter}>
                         <items.iconName/>

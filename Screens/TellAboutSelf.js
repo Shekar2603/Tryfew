@@ -15,6 +15,7 @@ import LeftArrow from '../assets/svgs/left-arrow.svg';
 import WhiteUp from '../assets/svgs/white-up.svg'
 import CloseRemove from '../assets/svgs/close-remove.svg'
 import ImagesThemes from '../utils/ImagesTheme';
+import CustomDropdownStates from './ReusableComps/customDropDownStates';
 
 export default function TellAboutSelf() {
 
@@ -33,6 +34,7 @@ export default function TellAboutSelf() {
     const [servicesSetter , setServiceSetter] = useState([]);
     const [selectedServices , setSelectedServices] = useState([]);
     const [selectedServiceIds, setSelectedServiceIds] = useState([]);
+    const [stateData ,  setStateData] = useState([]);
     const [citiesData ,  setCitiesData] = useState([]);
     const [loaderVisible , setLoaderVisible] = useState(false);
     const [successLoader , setSuccessLoader] = useState(false)
@@ -44,6 +46,10 @@ export default function TellAboutSelf() {
             height: 300,
             cropping: false
         }).then((image) => {
+            if (image.size > 2 * 1024 * 1024) { 
+                ToastAndroid.show('File Too Large' , ToastAndroid.LONG);// 2MB in bytes
+                return;
+            }
             console.log(image)
             setSelectedImage({ uri: image.path, type: 'image/jpeg', name: 'image.jpg'})
         })
@@ -59,6 +65,10 @@ export default function TellAboutSelf() {
             height: 300,
             cropping: false
         }).then((image) => {
+            if (image.size > 2 * 1024 * 1024) { 
+                ToastAndroid.show('File Too Large' , ToastAndroid.LONG);// 2MB in bytes
+                return;
+            }
             console.log(image)
             setSelectedImage2({ uri: image.path, type: 'image/jpeg', name: 'image.jpg'})
         })
@@ -152,6 +162,7 @@ export default function TellAboutSelf() {
         servicecategory: '',
         workyoudo: '',
         wherelive: '',
+        whereState: '',
         workingHours: ''
       });
       const [errors, setErrors] = useState(false);
@@ -207,17 +218,16 @@ export default function TellAboutSelf() {
         }
 
         formData.workyoudo = option.id
+
+        
     }
+    // console.log(formData?.workyoudo , "example")
 
     const removeService = (index) => {
         const newSelectedServices = [...selectedServices];
-        
         const removedService = newSelectedServices.splice(index, 1)[0];
-        
         setSelectedServices(newSelectedServices);
-
         const newSelectedServiceIds = selectedServiceIds.filter(id => id !== removedService.id);
-        
         setSelectedServiceIds(newSelectedServiceIds);
     };
 
@@ -225,10 +235,13 @@ export default function TellAboutSelf() {
     console.log(selectedServiceIds ,  "selectedServides")
 
 
-
+    const handleState = (option) => {
+        formData.whereState = option.id
+    }
     const handleCity = (option) => {
         formData.wherelive = option.id
     }
+
 
     const handleHours = (option) => {
         formData.workingHours = option.id
@@ -288,9 +301,37 @@ export default function TellAboutSelf() {
           formData.servicecategory = options.id
     }
 
-    const handleCities = async() => {
+    const handleStates = async() => {
         try {
-            await fetch(`${apiUrl}api/captain/get-cities-by-state-id/4012`, {
+            await fetch(`${apiUrl}api/captain/states/`, {
+                method: 'GET',
+                headers: {
+                    "Authorization": "Bearer" + userToken,
+                    "content-type": "application/json"
+                }
+            })
+            .then((response) => response.json())
+            .then(response => {
+                console.log(response?.states)
+                if(response) {
+                    // setCitiesData(response?.cities)
+                    // console.log(response);
+                    setStateData(response?.states)
+                }
+            })  
+            .catch((error) => {
+                console.error(error, "error");
+                throw Error(error);
+            });
+     
+          } catch (error) {
+            console.log(error , 'errors')
+          }
+    }
+
+    const handleCities = async(option) => {
+        try {
+            await fetch(`${apiUrl}api/captain/get-cities-by-state-id/${option.id}`, {
                 method: 'GET',
                 headers: {
                     "Authorization": "Bearer" + userToken,
@@ -318,7 +359,7 @@ export default function TellAboutSelf() {
     useEffect(() => {
         getUserDetails();
         getServiceTypes();
-        handleCities()
+        handleStates()
     }, []);
 
 
@@ -337,7 +378,10 @@ export default function TellAboutSelf() {
             detailForm.append('gender' , formData.gender);
             detailForm.append('service_type' , formData.servicetype);
             detailForm.append('service_category' , formData.servicecategory);
-            detailForm.append('service' , formData.workyoudo);
+            selectedServiceIds.forEach((service) => {
+                detailForm.append("service[]", service);
+            });
+            // detailForm.append('service[]' , selectedServiceIds);
             detailForm.append('city' , formData.wherelive);
             detailForm.append('shift_timing' , formData.workingHours);
             detailForm.append('id_proof' , {
@@ -352,12 +396,11 @@ export default function TellAboutSelf() {
             });
 
 
-            console.log(detailForm , "detailForm")
+            // console.log(detailForm , "detailForm")
             setLoaderVisible(true)
     
             try {
-                // console.log(userToken ,'example - starts')
-                await fetch(`${apiUrl}api/captain/add-user-details` , {
+                await fetch(`${apiUrl}api/captain/v2/add-user-details` , {
                     method: 'POST',
                     body: detailForm,
                     headers: {
@@ -372,26 +415,25 @@ export default function TellAboutSelf() {
                     if(response?.data) {
                         setSuccessLoader(true)
                         setLoaderVisible(false);
+                        // console.log('actual-response:', response)
                         navigation.navigate('SuccessFullRegist')
-                        ToastAndroid.show(response?.message , ToastAndroid.LONG);
+                        ToastAndroid.show("Error: Choose Less Quality Image" , ToastAndroid.LONG);
                     }
                     else if(response?.success === false) {
                         setLoaderVisible(false);
                         setSuccessLoader(false)
-                        console.log(response?.message)
-                        ToastAndroid.show(response?.message , ToastAndroid.LONG);
+                        ToastAndroid.show("Error: Choose Less Quality Image" , ToastAndroid.LONG);
                     }
-                    else if(response.errors) {
+                    else if(response?.errors) {
                         setLoaderVisible(false);
                         setSuccessLoader(false)
-                        console.log(response?.errors)
-                        ToastAndroid.show(response?.message , ToastAndroid.LONG);
+                        ToastAndroid.show("Error: Choose Less Quality Image" , ToastAndroid.LONG);
                     }  
                 })  
                 .catch((error) => {
                     setLoaderVisible(false);
                     setSuccessLoader(false)
-                    console.error(error, "error");
+                    console.error(error, "error-last");
                     throw Error(error);
                 });
          
@@ -406,6 +448,11 @@ export default function TellAboutSelf() {
 
         conatinerForTopNav: {
             flex: 1,
+        },
+        bottomListGrid: {
+            flexDirection: 'row',
+            gap: 10,
+            flexWrap: "wrap"
         },
         topHeadNavigation: {
             marginTop: 33,
@@ -572,17 +619,19 @@ export default function TellAboutSelf() {
         },
         subservices: {
             flexDirection: 'row',
-            gap: 8,
-            borderColor: ColorsTheme.Black,
+            gap: 10,
+            borderColor: ColorsTheme.Primary,
             paddingVertical: 8,
             paddingHorizontal: 15,
-            borderRadius: 5,
+            borderRadius: 30,
             borderWidth: 1,
             marginRight: 10,
-            alignItems: 'center'
+            alignItems: 'center',
+            backgroundColor: ColorsTheme.White,
+            elevation: 5
         },
         subservicesText: {
-            fontFamily: 'Manrope-Regular',
+            fontFamily: 'Manrope-Bold',
             fontSize: 15,
             color: ColorsTheme.Black
         },
@@ -701,23 +750,46 @@ export default function TellAboutSelf() {
                     onSelect={handleWork}
                 />
             </View>
-            {/* {selectedServices && selectedServices.length > 0 ? 
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        {selectedServices && selectedServices.length > 0 ? 
-                            selectedServices.map((items , index) => {
-                                return (
-                                    <View style={styles.subservices} key={index}>
-                                        <Text style={styles.subservicesText}>{items.name}</Text>
-                                        <TouchableOpacity style={styles.closeBtnOuter} onPress={() => removeService(index)}>
-                                            <CloseRemove/>
-                                        </TouchableOpacity>
-                                    </View>
-                                )   
-                            }) : null
-                        }
-                </ScrollView> : null
-            } */}
+            {selectedServices && selectedServices.length > 0 ? 
+                // <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                //         {selectedServices && selectedServices.length > 0 ? 
+                //             selectedServices.map((items , index) => {
+                //                 return (
+                //                     <View style={styles.subservices} key={index}>
+                //                         <Text style={styles.subservicesText}>{items.name}</Text>
+                //                         <TouchableOpacity style={styles.closeBtnOuter} onPress={() => removeService(index)}>
+                //                             <CloseRemove/>
+                //                         </TouchableOpacity>
+                //                     </View>
+                //                 )   
+                //             }) : null
+                //         }
+                // </ScrollView> : null
+                <View style={styles.bottomListGrid}>
+                    {selectedServices && selectedServices.length > 0 ? 
+                        selectedServices.map((items , index) => {
+                            return (
+                                <View style={styles.subservices} key={index}>
+                                    <Text style={styles.subservicesText}>{items.name}</Text>
+                                    <TouchableOpacity style={styles.closeBtnOuter} onPress={() => removeService(index)}>
+                                        <CloseRemove/>
+                                    </TouchableOpacity>
+                                </View>
+                            )   
+                        }) : null
+                    }
+                </View> : null
+            }
+
             
+            <View style={styles.singleInputOuter}>
+                <Text style={[styles.labelText , styles.paddingLables]}>Where do you live</Text>
+                <CustomDropdown
+                    options={stateData} 
+                    placeholder={'Select State'}
+                    onSelect={handleCities}
+                />
+            </View>
             <View style={styles.singleInputOuter}>
                 <Text style={[styles.labelText , styles.paddingLables]}>Where do you live</Text>
                 <CustomDropdown
