@@ -67,27 +67,30 @@ export default function Register() {
             body: formData,
         })
         .then((response) => response.json())
-        .then(response => {
+        .then(response => { 
             if(response?.data) {
-                console.log(response);
                 setSuccessLoader(true)
                 setTimeout(() => {
                     setLoaderVisible(false);
                     navigation.navigate('VerifyOtp' , {regEmail: response?.data?.email})
                 }, 3000 )
                 ToastAndroid.show('Please Verify Email Id' , ToastAndroid.LONG);
+            }else if(response?.errors) {
+                if(response?.errors?.email) {
+                    setLoaderVisible(false);
+                    setSuccessLoader(false);
+                    ToastAndroid.show("Email Already In Use" , ToastAndroid.LONG);
+                }
+                if(response?.errors?.password) {
+                    setLoaderVisible(false);
+                    setSuccessLoader(false);
+                    ToastAndroid.show('Password Error' , ToastAndroid.LONG);
+                }
             }
-            if(response.errors) {
-                setLoaderVisible(false);
-                setSuccessLoader(false)
-                console.log(response.errors)
-                ToastAndroid.show(response?.errors?.email[0] , ToastAndroid.LONG);
-            }  
         })  
         .catch((error) => {
             setLoaderVisible(false);
             setSuccessLoader(false)
-            console.error(error, "error");
             throw Error(error);
         });
  
