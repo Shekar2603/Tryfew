@@ -277,6 +277,7 @@ export default function VerifyOtp({route}) {
       flex: 1,
       justifyContent: "center",
       position: "relative",
+      backgroundColor: ColorsTheme.White
 
     },
     resendbtnInner: {
@@ -342,9 +343,9 @@ export default function VerifyOtp({route}) {
                 }
             </View>
         </Modal>
-        <View style={styles.welcomeBgImageOuter}>
+        {/* <View style={styles.welcomeBgImageOuter}>
             <Image source={ImagesThemes.WelcomeBg} style={styles.welcomeBgImage} />
-        </View>
+        </View> */}
         <View style={styles.TopLogo}>
             <TouchableOpacity style={styles.topLogoBtnOuter} onPress={() => navigation.navigate('WelcomeScreen')}><Image source={ImagesThemes.logo} style={styles.topLogoImage}/></TouchableOpacity>
         </View>

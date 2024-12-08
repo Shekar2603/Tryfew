@@ -283,7 +283,7 @@ accountReg: {
             <Text style={styles.profileHead}>Profile</Text>
           </View>
           <View style={styles.imageSectionProfile}>
-            <Image source={{uri: apiUrl + fechedUserData?.profile_img}} style={styles.profileImageTop}/>
+            {fechedUserData?.profile_img ? <Image source={{uri: apiUrl + fechedUserData?.profile_img}} style={styles.profileImageTop}/> : <Image source={ImagesThemes.emptyImage} style={styles.profileImageTop}/> } 
             <Text style={styles.nameSec}>{fechedUserData?.name}</Text>
             {/* <Text style={styles.wallamtSec}>₹ 365.00 </Text> */}
           </View>

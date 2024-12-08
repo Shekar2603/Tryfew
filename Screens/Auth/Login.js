@@ -322,7 +322,7 @@ const checkLoggedUserLogin = async () => {
         flex: 1,
         justifyContent: "center",
         position: "relative",
-
+        backgroundColor: ColorsTheme.White
       },
       scrollViewSec: {
         height: '100%',
@@ -338,9 +338,9 @@ const checkLoggedUserLogin = async () => {
 
   return (
     <View style={styles.mainContainer}>
-        <View style={styles.welcomeBgImageOuter}>
+        {/* <View style={styles.welcomeBgImageOuter}>
             <Image source={ImagesThemes.WelcomeBg} style={styles.welcomeBgImage} />
-        </View>
+        </View> */}
         <View style={styles.TopLogo}>
             <TouchableOpacity style={styles.loginBack} onPress={() => navigation.navigate('WelcomeScreen')}>
                 <ChevronLeft/>

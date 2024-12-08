@@ -609,7 +609,7 @@ const WalletScreen = ({route}) => {
         },
         WalletSucAmt: {
             fontFamily: 'Manrope-Bold',
-            fontSize: 30,
+            fontSize: 25,
             textAlign: "center",
             marginTop: 20,
             marginBottom: 10,
@@ -720,7 +720,7 @@ const WalletScreen = ({route}) => {
                 </View>
                 <View style={styles.imageSectionProfile}>
                     <View style={styles.ProfileimageIconer}>
-                        <Image source={{uri: apiUrl + fetchedUserData?.profile_img}} style={styles.profileImageTop}/>
+                       {fetchedUserData?.profile_img ? <Image source={{uri: apiUrl + fetchedUserData?.profile_img}} style={styles.profileImageTop}/> : <Image source={ImagesThemes.emptyImage} style={styles.profileImageTop}/> } 
                         <Text style={styles.nameSec}>{fetchedUserData?.name}</Text>
                     </View>
                 </View>
@@ -729,18 +729,18 @@ const WalletScreen = ({route}) => {
                 <View style={styles.innerScrollerProfile}>
                     <Modal isVisible={isSuccessVisible}>
                         <View style={styles.modalSectionOuter2}>
-                            <View style={styles.modalCloseAbs}>
+                            {/* <View style={styles.modalCloseAbs}>
                                 <TouchableOpacity style={styles.modalCloser} >
                                     <CloseIcon/>
                                 </TouchableOpacity>
-                            </View>
+                            </View> */}
                             <View>
                                 <LottieView 
                                     source={require('../../assets/Icon/check.json')}
                                     autoPlay
                                     style={{
-                                        width: 200,
-                                        height: 200,
+                                        width: 120,
+                                        height: 120,
                                         marginLeft: 'auto',
                                         marginRight: 'auto'
                                     }}
@@ -789,7 +789,7 @@ const WalletScreen = ({route}) => {
                             <Text style={styles.selectedPlan}>
                                 <Text style={styles.boldText}>Note:</Text> You have Selected {activePackage?.actualTitle} Plan which is valid for {activePackage?.validity}.
                             </Text>
-                            <Text style={styles.walletInputText2}>50% Cashback , *Terms & Conditions Apply</Text>    
+                            <Text style={styles.walletInputText2}>*50% Cashback , *Terms & Conditions Apply</Text>    
                             {/* <View style={styles.submitbtn}>
                                 <TouchableOpacity style={styles.signinbtn} onPress={createOrderHandler}>
                                     <Text style={styles.signinnertwo}>Add Money</Text>

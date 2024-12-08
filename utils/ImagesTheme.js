@@ -14,6 +14,7 @@ const ImagesThemes = {
     passwordIcon: require('../assets/password-icon.png'),
     callIcon: require('../assets/call-input.png'),
 
+    emptyImage: require('../assets/empty-image.png'),
 
     // Terms and Conditions Images
     tcImage: require('../assets/tcimage.png'),
