@@ -57,8 +57,6 @@ export default function Register() {
       formData.append('phone' , values.number);
       formData.append('password', values.password);
 
-    //   console.log(formData)
-
       setLoaderVisible(true);
       
       try {
@@ -90,7 +88,8 @@ export default function Register() {
         })  
         .catch((error) => {
             setLoaderVisible(false);
-            setSuccessLoader(false)
+            setSuccessLoader(false);
+            ToastAndroid.show('Error Registering The User' , ToastAndroid.LONG);
             throw Error(error);
         });
  
@@ -114,8 +113,6 @@ export default function Register() {
         //         setIsKeyboardVisible(false)
         //     }
         // );
-
-
         // return () => {
         //     keyboardDidShowListener.remove();
         //     keyboardDidHideListner.remove();

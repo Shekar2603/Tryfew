@@ -168,7 +168,7 @@ const WalletScreen = ({route}) => {
           description: 'Payment for your order',
           order_id: orderId, 
           prefill: {
-            email: 'sg83362@gmail.com', 
+            email: 'tryfewmultisalesandservice@gmail.com', 
             contact: '9030598490', 
             name: 'Sreedhar P', 
           },
