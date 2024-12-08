@@ -16,6 +16,7 @@ import WalletScreen from '../ProfileFlowScreens/WalletScreen';
 import TransactionHistory from '../ProfileFlowScreens/TransactionHistory';
 import { NavigationContainer } from '@react-navigation/native';
 import PreWelcomeScreen from '../PreWelcomeScreen';
+import MoreAboutScreen from '../MoreAboutScreen';
 
 
 const Drawer = createDrawerNavigator()
@@ -76,6 +77,13 @@ export default function MainNavigation() {
         <Drawer.Screen
             name='Tellusyourself'
             component={TellAboutSelf}
+            options={{
+                header : () =>  null
+            }}
+        />
+        <Drawer.Screen
+            name='MoreAboutYou'
+            component={MoreAboutScreen}
             options={{
                 header : () =>  null
             }}

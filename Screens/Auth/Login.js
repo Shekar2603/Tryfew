@@ -118,10 +118,6 @@ const checkLoggedUserLogin = async () => {
             setLoaderVisible(false)
             ToastAndroid.show('Logged in successfully' , ToastAndroid.LONG);
             navigation.navigate('HomePage');
-          } else if(userLogParse.token && userLogParse.tell_me_about_yourself === false) {
-            setLoaderVisible(false)
-            ToastAndroid.show('Fill Details Form Up Next' , ToastAndroid.LONG);
-            navigation.navigate('TermsConditions'); 
           } else {
             setLoaderVisible(false)
             ToastAndroid.show('Login in Again' , ToastAndroid.LONG);

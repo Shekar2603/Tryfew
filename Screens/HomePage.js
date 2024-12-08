@@ -173,10 +173,6 @@ const getData = (toked) => {
       rightText: fechedUserData?.created_at ? fechedUserData?.created_at : 'Date Recorded',
     },
     {
-      leftText: 'Applied For',
-      rightText: fechedUserData?.services?.join(', '),
-    },
-    {
       leftText: 'KYC Status',
       rightText: fechedUserData?.kyc_verified === false ? 'Not Verified' : 'Verified',
     },
@@ -255,408 +251,419 @@ const getData = (toked) => {
 
 
 
-
   const styles = StyleSheet.create({
-      mainHomeContainer: {
-        flex: 1,
-        height: '100%',
-        backgroundColor: ColorsTheme.White
+        mainHomeContainer: {
+          flex: 1,
+          height: '100%',
+          backgroundColor: ColorsTheme.White
 
-      },
-      homeTopBar: {
-        // position: "absolute",
-        // top: 33,
-        paddingVertical: 20,
-        backgroundColor: "#fff",
-        width: "100%",
-        // marginTop: 33
-      },
-      homeTextHead: {
-        fontFamily: 'Manrope-Bold',
-        textAlign: "center",
-        fontSize: 18
+        },
+        homeTopBar: {
+          // position: "absolute",
+          // top: 33,
+          paddingVertical: 20,
+          backgroundColor: "#fff",
+          width: "100%",
+          // marginTop: 33
+        },
+        homeTextHead: {
+          fontFamily: 'Manrope-Bold',
+          textAlign: "center",
+          fontSize: 18
 
-      },
-      bottomProfileMenu: {
-        flexDirection: 'row',
-        paddingHorizontal: 15,
-        justifyContent: "space-between",
-        alignItems: "center"
-      },
-      menuIcon: {
-        fontSize: 30,
-        color: ColorsTheme.Primary,
+        },
+        bottomProfileMenu: {
+          flexDirection: 'row',
+          paddingHorizontal: 15,
+          justifyContent: "space-between",
+          alignItems: "center"
+        },
+        menuIcon: {
+          fontSize: 30,
+          color: ColorsTheme.Primary,
 
-      },
-      helloText: {
-        fontSize: 18,
-        fontFamily: 'Manrope-Bold',
-        textAlign: "right"
-      },
-      profileImageTextOuter: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-        marginTop: 10
-      },
-      profileImageCardOuter: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-      },
-      profileImageStyle:{ 
-        width: 50,
-        height: 50,
-        borderRadius: 50
-      },  
-      profileCardImage: {
-        width: 40,
-        height: 40,
-        borderRadius: 50
-      },
-
-      inactiveText: {
-        backgroundColor: ColorsTheme.lightOrange,
-        color: ColorsTheme.Primary,
-        fontFamily: 'Manrope-SemiBold',
-        fontSize:12,
-        borderRadius: 15,
-        paddingHorizontal: 15,
-        paddingVertical: 5,
-
-      },
-      mainPorfileTopCard: {
-        flexDirection: 'row',
-        alignItems: "flex-end",
-        justifyContent: "space-between",
-        paddingHorizontal: 15,
-        paddingVertical: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: ColorsTheme.lightBorder,
-      },
-      cardTabs: {
-        flexDirection: 'row',
-        backgroundColor: ColorsTheme.gray,
-        borderRadius: 50,
-        overflow: 'hidden',
-        padding: 5,
-        justifyContent: "space-between",
-        marginBottom: 20,
-      },
-      tabsBtnsText: {
-        fontFamily: 'Manrope-Bold',
-        fontSize: 16,
-        color: ColorsTheme.Black,
-        textAlign: "center"
-      },
-      singleTabBtn: {
-        backgroundColor: ColorsTheme.White,
-        borderRadius: 40,
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        width: "32%"
-      },
-      uploadphotosOuter: {
-          borderWidth: 1,
-          borderColor: ColorsTheme.lightBorder,
-          borderRadius: 8,
-          overflow: 'hidden',
-      },
-      uploadImage: {
+        },
+        helloText: {
+          fontSize: 18,
+          fontFamily: 'Manrope-Bold',
+          textAlign: "right"
+        },
+        profileImageTextOuter: {
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 10
+        },
+        profileImageCardOuter: {
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 10,
+        },
+        profileImageStyle:{ 
+          width: 50,
+          height: 50,
+          borderRadius: 50
+        },  
+        profileCardImage: {
           width: 40,
           height: 40,
-          objectFit: 'contain'
-      },
-      uploadText: {
-          fontFamily: 'Manrope-Medium',
+          borderRadius: 50
+        },
+
+        inactiveText: {
+          backgroundColor: ColorsTheme.lightOrange,
+          color: ColorsTheme.Primary,
+          fontFamily: 'Manrope-SemiBold',
+          fontSize:12,
+          borderRadius: 15,
+          paddingHorizontal: 15,
+          paddingVertical: 5,
+
+        },
+        mainPorfileTopCard: {
+          flexDirection: 'row',
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          paddingHorizontal: 15,
+          paddingVertical: 15,
+          borderBottomWidth: 1,
+          borderBottomColor: ColorsTheme.lightBorder,
+        },
+        cardTabs: {
+          flexDirection: 'row',
+          backgroundColor: ColorsTheme.gray,
+          borderRadius: 50,
+          overflow: 'hidden',
+          padding: 5,
+          justifyContent: "space-between",
+          marginBottom: 20,
+        },
+        tabsBtnsText: {
+          fontFamily: 'Manrope-Bold',
           fontSize: 16,
           color: ColorsTheme.Black,
+          textAlign: "center"
+        },
+        singleTabBtn: {
+          backgroundColor: ColorsTheme.White,
+          borderRadius: 40,
+          paddingHorizontal: 10,
+          paddingVertical: 6,
+          width: "32%"
+        },
+        uploadphotosOuter: {
+            borderWidth: 1,
+            borderColor: ColorsTheme.lightBorder,
+            borderRadius: 8,
+            overflow: 'hidden',
+        },
+        uploadImage: {
+            width: 40,
+            height: 40,
+            objectFit: 'contain'
+        },
+        uploadText: {
+            fontFamily: 'Manrope-Medium',
+            fontSize: 16,
+            color: ColorsTheme.Black,
+        },
+        photoUpHead: {
+          fontFamily: 'Manrope-SemiBold',
+          fontSize: 17,
+          width: '100%',
+          paddingHorizontal: 15,
+          paddingVertical: 15,
+          borderBottomWidth: 1,
+          borderBottomColor: ColorsTheme.borderColor,
+          color: ColorsTheme.Black
       },
-      photoUpHead: {
-        fontFamily: 'Manrope-SemiBold',
-        fontSize: 17,
-        width: '100%',
+      panImage: {
+        width: "100%",
+        height: 120
+      },
+      notKYCtext: {
+        fontSize: 15,
+        color: ColorsTheme.Black,
+        fontFamily:'Manrope-Bold'
+      },
+      redClose: {
+        fontSize: 20,
+        color: ColorsTheme.Red
+      },
+      kycNotOuter: {
+        backgroundColor: ColorsTheme.lightOrange,
+        borderRadius: 50,
+        paddingLeft: 8,
+        paddingRight: 15,
+        paddingVertical: 5,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 5,
+        alignSelf: "flex-start",
+        marginTop: 15
+      },
+      profileBottomContent: {
         paddingHorizontal: 15,
+        paddingVertical: 25
+      },
+      mainProfileCard: {
+        backgroundColor: ColorsTheme.White,
+        elevation: 10,
+        borderRadius: 15,
+        marginTop: 20
+      },
+      ScrollInner: {
+        paddingHorizontal: 15,
+        paddingBottom: 120
+      },
+      menuIconBtn:{ 
+        marginTop: 20
+      },
+      singleListOut: {
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: "space-between"
+      },
+      lightTextLeft: {
+        fontFamily: 'Manrope-Regular',
+        fontSize: 14,
+        color: ColorsTheme.Black,
+        opacity: 0.7
+      },
+      darkTextRight: {
+        fontFamily: "Manrope-SemiBold",
+        fontSize: 14,
+        color: ColorsTheme.Black,
+        width: '60%'
+      }, 
+      detailsCardOut: {
+        backgroundColor: ColorsTheme.lightGray,
+        borderRadius: 15,
+        paddingHorizontal: 20,
         paddingVertical: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: ColorsTheme.borderColor,
+        flexDirection :'column',
+        gap:15
+      },
+      applicationStatText: {
+        fontFamily: 'Manrope-Regular',
         color: ColorsTheme.Black
+      },
+      backGrayBar: {
+        backgroundColor: ColorsTheme.darkGray,
+        padding: 3,
+        borderRadius: 10,  
+      },
+      orangeBar: {
+        backgroundColor: ColorsTheme.Primary,
+        padding: 3,
+        borderRadius: 5,  
+        width: '50%'
+      },
+      cateScroll:{
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
+        overflow: "hidden"
+      },
+      ImageOuter: {
+        height: 70,
+        width: 70,
+        flexDirection: "row",
+        alignItems : "center",
+        justifyContent: "center",
+        borderRadius: 10,
+        marginHorizontal: 7,
+        borderWidth: 1,
+
     },
-    panImage: {
-      width: "100%",
-      height: 120
+    cateImage: {
+      width: 40,
+      height: 40,
+      objectFit: "contain",
     },
-    notKYCtext: {
-      fontSize: 15,
+    cateName: {
+        fontFamily: "Manrope-Medium",
+        color: ColorsTheme.Black,
+        fontSize: 10,
+        textAlign: "center",
+        marginTop: 5,
+      },
+    restByCate:{
+        marginBottom: 15,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 30
+    },
+    restNameChange :{
       color: ColorsTheme.Black,
-      fontFamily:'Manrope-Bold'
+      fontFamily: 'Manrope-Bold',
+      fontSize: 18
     },
-    redClose: {
-      fontSize: 20,
-      color: ColorsTheme.Red
-    },
-    kycNotOuter: {
-      backgroundColor: ColorsTheme.lightOrange,
-      borderRadius: 50,
-      paddingLeft: 8,
-      paddingRight: 15,
-      paddingVertical: 5,
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 5,
-      alignSelf: "flex-start",
-      marginTop: 15
-    },
-    profileBottomContent: {
-      paddingHorizontal: 15,
-      paddingVertical: 25
-    },
-    mainProfileCard: {
-      backgroundColor: ColorsTheme.White,
-      elevation: 10,
-      borderRadius: 15,
-      marginTop: 20
-    },
-    ScrollInner: {
-      paddingHorizontal: 15,
-      paddingBottom: 40
-    },
-    menuIconBtn:{ 
-      marginTop: 20
-    },
-    singleListOut: {
-      flexDirection: "row",
-      alignItems: 'center',
-      justifyContent: "space-between"
-    },
-    lightTextLeft: {
+    viewallText: {
       fontFamily: 'Manrope-Regular',
-      fontSize: 14,
-      color: ColorsTheme.Black,
-      opacity: 0.7
+      color: '#0496ff'
     },
-    darkTextRight: {
-      fontFamily: "Manrope-SemiBold",
-      fontSize: 14,
-      color: ColorsTheme.Black,
-      width: '60%'
-    }, 
-    detailsCardOut: {
-      backgroundColor: ColorsTheme.lightGray,
-      borderRadius: 15,
-      paddingHorizontal: 20,
-      paddingVertical: 15,
-      flexDirection :'column',
-      gap:15
+    cateRests:{
+      backgroundColor: ColorsTheme.White,
+      borderRadius: 20,
+      overflow: "hidden",
+      elevation: 10,
     },
-    applicationStatText: {
+    restaurantImage :{
+      width: "100%",
+      height: 150,
+      objectFit: "cover"
+    },
+    restaurantImage2 :{
+      width: "100%",
+      height: 100,
+      objectFit: "cover"
+    },
+    kmRest:{
       fontFamily: 'Manrope-Regular',
       color: ColorsTheme.Black
     },
-    backGrayBar: {
-      backgroundColor: ColorsTheme.darkGray,
-      padding: 3,
-      borderRadius: 10,  
+    restaurantNav:{
+      width: 15,
+      height: 15,
+      objectFit: "contain"
     },
-    orangeBar: {
-      backgroundColor: ColorsTheme.Primary,
-      padding: 3,
-      borderRadius: 5,  
-      width: '50%'
+    bottomDescRest: {
+      position:"relative",
+      paddingHorizontal: 15,
+      paddingTop: 10, 
+      paddingBottom: 20
     },
-    cateScroll:{
-      borderBottomRightRadius: 15,
-      borderBottomLeftRadius: 15,
-      overflow: "hidden"
+    resthead:{
+      fontFamily: 'Manrope-Bold',
+      color: ColorsTheme.Primary,
+      fontSize: 20,
+      marginBottom: 2
     },
-    ImageOuter: {
-      height: 70,
-      width: 70,
-      flexDirection: "row",
-      alignItems : "center",
-      justifyContent: "center",
-      borderRadius: 10,
-      marginHorizontal: 7,
-      borderWidth: 1,
-
-  },
-  cateImage: {
-    width: 40,
-    height: 40,
-    objectFit: "contain",
-  },
-  cateName: {
+    resthead2: {
+      fontFamily: 'Manrope-Bold',
+      color: ColorsTheme.Primary,
+      fontSize: 15,
+      marginBottom: 2
+    },
+    timingSection:{
       fontFamily: "Manrope-Medium",
       color: ColorsTheme.Black,
-      fontSize: 10,
-      textAlign: "center",
-      marginTop: 5,
+      marginBottom: 5
     },
-  restByCate:{
-      marginBottom: 15,
+    absRating:{
+      width: 40,
+      height: 40,
       flexDirection: "row",
-      justifyContent: "space-between",
-      marginTop: 30
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 50,
+      backgroundColor:ColorsTheme.Primary,
+      position: "absolute",
+      top: -20,
+      right:20
+    },
+    ratingDes:{
+      color: ColorsTheme.Black,
+      fontFamily: 'Manrope-Bold'
+    },
+    restDistance: {
+      flexDirection: "row",
+      // alignItems: "center",
+      gap: 10,
+      marginTop: 10,
+    },
+    imageRater: {
+      flexDirection: "row",
+      
+      gap: 5
+    },
+    smallIconImages: {
+      width: 20,
+      height: 20
+    },
+    cateRests2: {
+      backgroundColor: ColorsTheme.White,
+      borderRadius: 20,
+      overflow: "hidden",
+      elevation: 10,
+      marginBottom: 20,
+      width: 150,
+      marginTop: 20
+    },
+    bottomDescRest: {
+      position:"relative",
+      paddingHorizontal: 15,
+      paddingTop: 10, 
+      paddingBottom: 20
+    },
+    resthead:{
+      fontFamily: 'Manrope-Bold',
+      color: ColorsTheme.Primary,
+      fontSize: 20,
+      marginBottom: 10
+    },
+    timingSection:{
+      fontFamily: "Manrope-Medium",
+      color: ColorsTheme.Black,
+      marginBottom: 5
+    },
+    popservhead: {
+      color: ColorsTheme.Black,
+      fontFamily: 'Manrope-Bold',
+      fontSize: 18,
+      marginTop: 20
+    },
+
+    restScroller :{
+      // paddingBottom: 50
+    },
+    verifiedButton: {
+      backgroundColor: ColorsTheme.Primary,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: 30,
+      color: ColorsTheme.White,
+      fontFamily: 'Manrope-Bold',
+      alignSelf: 'baseline',
+      marginTop: 20
+    },
+    bottomVerfybutton:{
+      marginBottom: 60
+    },
+    profileCardText: {
+      color: ColorsTheme.Black
+    },
+    innerModal:{
+      backgroundColor: ColorsTheme.White,
+      paddingHorizontal: 20,
+      paddingVertical: 20,
+      borderRadius: 10
   },
-  restNameChange :{
-    color: ColorsTheme.Black,
-    fontFamily: 'Manrope-Bold',
-    fontSize: 18
+  innerLoading: {
+      flexDirection: 'row',
+      alignItems: "center",
+      gap: 20
   },
-  viewallText: {
-    fontFamily: 'Manrope-Regular',
-    color: '#0496ff'
+  accountReg: {
+      color: ColorsTheme.Black,
+      fontSize: 18,
+      fontFamily: 'Manrope-Bold'
+
   },
-  cateRests:{
-    backgroundColor: ColorsTheme.White,
-    borderRadius: 20,
-    overflow: "hidden",
-    elevation: 10,
-  },
-  restaurantImage :{
-    width: "100%",
-    height: 150,
-    objectFit: "cover"
-  },
-  restaurantImage2 :{
-    width: "100%",
-    height: 100,
-    objectFit: "cover"
-  },
-  kmRest:{
-    fontFamily: 'Manrope-Regular',
-    color: ColorsTheme.Black
-  },
-  restaurantNav:{
-    width: 15,
-    height: 15,
-    objectFit: "contain"
-  },
-  bottomDescRest: {
-    position:"relative",
-    paddingHorizontal: 15,
-    paddingTop: 10, 
-    paddingBottom: 20
-  },
-  resthead:{
-    fontFamily: 'Manrope-Bold',
-    color: ColorsTheme.Primary,
-    fontSize: 20,
-    marginBottom: 2
-  },
-  resthead2: {
-    fontFamily: 'Manrope-Bold',
-    color: ColorsTheme.Primary,
+  applyServiceHead: {
     fontSize: 15,
-    marginBottom: 2
-  },
-  timingSection:{
-    fontFamily: "Manrope-Medium",
+    fontFamily: 'Manrope-Regular',
     color: ColorsTheme.Black,
-    marginBottom: 5
+    marginBottom: 4
   },
-  absRating:{
-    width: 40,
-    height: 40,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-    backgroundColor:ColorsTheme.Primary,
-    position: "absolute",
-    top: -20,
-    right:20
-  },
-  ratingDes:{
+  applyServiceText: {
+    fontSize: 15,
+    fontFamily: 'Manrope-SemiBold',
     color: ColorsTheme.Black,
-    fontFamily: 'Manrope-Bold'
-  },
-  restDistance: {
-    flexDirection: "row",
-    // alignItems: "center",
-    gap: 10,
-    marginTop: 10,
-  },
-  imageRater: {
-    flexDirection: "row",
-    
-    gap: 5
-  },
-  smallIconImages: {
-    width: 20,
-    height: 20
-  },
-  cateRests2: {
-    backgroundColor: ColorsTheme.White,
-    borderRadius: 20,
-    overflow: "hidden",
-    elevation: 10,
-    marginBottom: 20,
-    width: 150,
-    marginTop: 20
-  },
-  bottomDescRest: {
-    position:"relative",
-    paddingHorizontal: 15,
-    paddingTop: 10, 
-    paddingBottom: 20
-  },
-  resthead:{
-    fontFamily: 'Manrope-Bold',
-    color: ColorsTheme.Primary,
-    fontSize: 20,
-    marginBottom: 10
-  },
-  timingSection:{
-    fontFamily: "Manrope-Medium",
-    color: ColorsTheme.Black,
-    marginBottom: 5
-  },
-  popservhead: {
-    color: ColorsTheme.Black,
-    fontFamily: 'Manrope-Bold',
-    fontSize: 18,
-    marginTop: 20
+    width: '100%'
   },
 
-  restScroller :{
-    // paddingBottom: 50
-  },
-  verifiedButton: {
-    backgroundColor: ColorsTheme.Primary,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 30,
-    color: ColorsTheme.White,
-    fontFamily: 'Manrope-Bold',
-    alignSelf: 'baseline',
-    marginTop: 20
-  },
-  bottomVerfybutton:{
-    marginBottom: 60
-  },
-  profileCardText: {
-    color: ColorsTheme.Black
-  },
-  innerModal:{
-    backgroundColor: ColorsTheme.White,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderRadius: 10
-},
-innerLoading: {
-    flexDirection: 'row',
-    alignItems: "center",
-    gap: 20
-},
-accountReg: {
-    color: ColorsTheme.Black,
-    fontSize: 18,
-    fontFamily: 'Manrope-Bold'
-
-},
-
-})
+  })
 
 
   const HorizontalCategories = () => {
@@ -694,7 +701,7 @@ accountReg: {
               </View>
             </View>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.mainScrollerHome}>
+        <ScrollView  style={styles.mainScrollerHome}>
           <Modal isVisible={loader}>
               <View style={styles.innerModal}>
                   <View style={styles.innerLoading}>
@@ -715,9 +722,9 @@ accountReg: {
                         <Text style={[styles.profileCardText, {fontFamily: 'Manrope-Regular'}]}>{fechedUserData?.email}</Text>
                       </View>
                     </View>
-                    <View>
+                    {/* <View>
                         <Text style={styles.inactiveText}>Inactive</Text>
-                    </View>
+                    </View> */}
                   </View>
                   <View style={styles.profileBottomContent}>
                       <View style={styles.cardTabs}>
@@ -746,6 +753,10 @@ accountReg: {
                                 </View>
                               )
                               })} 
+                              <View>
+                                <Text style={styles.applyServiceHead}>Applied Services</Text>
+                                <Text style={styles.applyServiceText}>{fechedUserData?.services?.join(', ')}</Text>
+                              </View>
                           </View> : null
                       }
                       {tabActiver === 'Status' ? 

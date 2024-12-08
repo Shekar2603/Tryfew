@@ -58,6 +58,7 @@ const ImagesThemes = {
     profileIcon: require('../assets/profile-left.png'),
     servicesIcon: require('../assets/services.png'),
     logoutIcon: require('../assets/logout.png'),
+    transationSidebar: require('../assets/transactions-sidebar.png'),
 
 
     // Pre Welcome Screen

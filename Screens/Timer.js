@@ -7,7 +7,7 @@ export default function Timer() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const targetDate = new Date("2025-01-30T23:59:59"); // Fixed target end date
+    const targetDate = new Date("2025-02-05T23:59:59"); // Fixed target end date
 
     const updateTimer = () => {
       const now = new Date();

@@ -243,7 +243,7 @@ export default function SideBar() {
         {
             name: 'Transactions',
             link: 'Transactions',
-            icon: ImagesThemes.WalletSideIcon,
+            icon: ImagesThemes.transationSidebar,
             rightText: null,
             rightIcon: true
         },

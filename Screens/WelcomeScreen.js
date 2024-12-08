@@ -223,8 +223,8 @@ export default function WelcomeScreen() {
             })}
         </View>
         <View style={styles.bottomAlready}>
-            <Text style={styles.alreadyText}>Already have an account</Text> 
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={styles.loginbuttontext}>Login</Text></TouchableOpacity>
+            <Text style={styles.alreadyText}>Register Account ?</Text> 
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}><Text style={styles.loginbuttontext}>Sign Up</Text></TouchableOpacity>
         </View>
       {/* <Text style={styles.topText}>WelcomeScreen</Text> */}
     </View>

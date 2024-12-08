@@ -29,26 +29,29 @@ const WalletScreen = ({route}) => {
     const apiUrl = 'https://www.tryfew.in/try-few-v1/public/'
 
     const navigation = useNavigation();
+    const [isModalVisible , setModalVisible] = useState(false);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
           getUserDetails();
+          setModalVisible(false)
         });
     
         return unsubscribe;
       }, [navigation]);
 
-    const [isModalVisible , setModalVisible] = useState(false);
+
 
     const [isSuccessVisible ,  setIsSuccessVisible] = useState(false);
     const [razAmount ,  setRazAmount] = useState();
     const [paymentLoader ,  setPaymentLoader] = useState(false)
 
     const [activePackage , setActivePackage] = useState({
-        title: '₹ 299',
-        validity: '1 Month',
+        title: '₹ 499',
+        actualTitle: '₹ 299',
+        validity: '1 Month (28days) with 14 Assured Calls',
         amount: 299
-    },)
+    })
 
 
     const [userToken , setUserToken] = useState('');
@@ -94,41 +97,28 @@ const WalletScreen = ({route}) => {
         }
     }
 
-    // const handleAddWalletAmt = (values) => {
-    //     const numericValue = Number(values.amount)
-    //     console.log(numericValue)
-    //     if(numericValue === 430) {
-    //         setModalVisible(true)
-    //     }else {
-    //         setAddMoneyVisible(true)
-    //         ToastAndroid.show('You need to add minimum Rs.430' , ToastAndroid.LONG);
-    //         setModalVisible(false)
-    //     }
-    // }
-
     console.log(fetchedUserData, "fetched")
 
     const amountPackages = [
         {
-            title: '₹ 299',
-            validity: '1 Month',
+            title: '₹ 499',
+            actualTitle: '₹ 299',
+            validity: '1 Month (28days) with 14 Assured Calls',
             amount: 299
         },
         {
-            title: '₹ 599',
-            validity: '2 Months (56days) + 28days Free',
+            title: '₹ 999',
+            actualTitle: '₹ 599',
+            validity: '2 Months (56days) with 35 Assured Calls',
             amount: 599
         },
         {
-            title: '₹ 999',
-            validity: '3 Months (84days) + 84days Free ',
+            title: '₹ 1499',
+            actualTitle: '₹ 999',
+            validity: '3 Months (84days) with 70 Assured Calls',
             amount: 999
         },
     ]
-
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
 
 
     const createOrderHandler = async() => {
@@ -268,7 +258,6 @@ const WalletScreen = ({route}) => {
     const styles = StyleSheet.create({
         mainProfileContainer: {
             flex: 1,
-            // position: 'relative'
             backgroundColor: ColorsTheme.White
         },
         modalCloser: {
@@ -276,18 +265,18 @@ const WalletScreen = ({route}) => {
             height: 20
         },  
         TopProfileDisplay: {
-            // position: 'absolute',
-            // top: 0,
             backgroundColor: ColorsTheme.Primary,
             borderBottomLeftRadius:30,
             borderBottomRightRadius:30,
             width:'100%',
             paddingTop: 15,
-            paddingBottom: 40
+            paddingBottom: 20,
+            borderColor: ColorsTheme.White,
+            borderBottomWidth: 4
         },
         profileImageTop: {
-            width: 100,
-            height: 100,
+            width: 80,
+            height: 80,
             borderRadius: 100,
             borderWidth: 2,
             borderColor:  ColorsTheme.White
@@ -322,7 +311,8 @@ const WalletScreen = ({route}) => {
             paddingHorizontal: 15,
             flexDirection: 'column',
             gap: 15,
-            paddingVertical: 20
+            paddingTop: 10,
+            paddingBottom: 30
         },
         singleMenuItemOuter: {
             flexDirection: "row",
@@ -459,16 +449,14 @@ const WalletScreen = ({route}) => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            borderTopRightRadius: 10,
-            borderTopLeftRadius: 10,
-            borderBottomRightRadius: 15,
-            borderBottomLeftRadius: 15,
+            borderRadius: 10,
         },
         signinnertwo: {
             fontSize: 18,
             color: ColorsTheme.White,
             fontFamily: 'Manrope-Bold'
         },
+
         forgotLink: {
             fontFamily:  'Manrope-Medium',
             fontSize: 16,
@@ -477,6 +465,51 @@ const WalletScreen = ({route}) => {
         submitbtn: {
             marginTop: 20,
             marginBottom:  0
+        },
+        addMoneyButtonNew: {
+            width: '94%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: 14
+        },  
+        addMoneyButtonNew2: {
+            width: '94%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: 14,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+        },  
+        addMoneyBtn: {
+            backgroundColor: ColorsTheme.lightGreen
+        },  
+        backBtn: {
+            width: '45%',
+            backgroundColor: ColorsTheme.White,
+            borderWidth: 1,
+            borderColor: ColorsTheme.Primary,
+            borderRadius: 10,
+            paddingHorizontal: 25,
+            paddingVertical: 10
+        },  
+        backBtnText: {
+            fontSize: 18,
+            color: ColorsTheme.Black,
+            fontFamily: 'Manrope-Bold',
+            textAlign: 'center'
+        },
+        paynowBtn: {
+            width: '50%',
+            backgroundColor: ColorsTheme.lightGreen,
+            borderRadius: 10,
+            paddingHorizontal: 25,
+            paddingVertical: 10
+        },  
+        payBtnText: {
+            fontSize: 18,
+            color: ColorsTheme.White,
+            fontFamily: 'Manrope-Bold',
+            textAlign: 'center'
         },
         signInHeadText: {
             fontFamily: "Poppins-Medium",
@@ -558,7 +591,7 @@ const WalletScreen = ({route}) => {
             fontSize: 20,
             fontFamily: 'Manrope-Bold',
             textAlign: "center",
-            marginBottom: 30,
+            marginBottom: 15,
             color:ColorsTheme.Black
         },
         successModalHeader: {
@@ -583,7 +616,7 @@ const WalletScreen = ({route}) => {
             color: ColorsTheme.Black
         },
         groupWalletSelectors: {
-            marginVertical: 15,
+            marginBottom: 15,
             flexDirection: 'colmn',
             gap: 15
         },  
@@ -592,6 +625,16 @@ const WalletScreen = ({route}) => {
             alignItems: "center",
             gap: 15
         },
+        bottomTextOfferPrice: {
+            flexDirection: 'row',
+            alignItems: "center",
+            justifyContent: 'space-between',
+            gap: 15,
+            width: '100%',
+            borderTopWidth: 1,
+            marginTop: 10,
+            paddingTop: 10
+        },  
         singleWalletSelector: {
             paddingHorizontal: 20,
             borderWidth: 1,
@@ -600,6 +643,13 @@ const WalletScreen = ({route}) => {
             position: 'relative'
         },
         singleSelectText :{
+            fontFamily: 'Manrope-ExtraBold',
+            fontSize: 18,
+            textDecorationStyle: 'dashed',
+            textDecorationLine: 'line-through',
+            textDecorationColor: ColorsTheme.Black
+        },
+        singleSelectText2 :{
             fontFamily: 'Manrope-ExtraBold',
             fontSize: 22,
         },
@@ -613,6 +663,12 @@ const WalletScreen = ({route}) => {
             fontFamily: 'Manrope-Semibold',
             marginTop: 5,
             width: '65%'
+        },
+        planText2: {
+            fontSize: 16,
+            fontFamily: 'Manrope-Bold',
+            marginTop: 5,
+            // width: '65%'
         },
         selectedPlan: {
             fontSize: 14,
@@ -641,71 +697,87 @@ const WalletScreen = ({route}) => {
             fontFamily: 'Manrope-Bold'
     
         },
-        
+        walBalOut: {
+            paddingBottom: 20,
+            paddingTop: 10,
+            flexDirection: 'column',
+            gap: 5
+        },
+        WalletFirst: {
+            paddingTop: 20,
+        }
 
     })
     
       return (
         <View style={styles.mainProfileContainer}>
-          <View style={styles.TopProfileDisplay}>
-              <View style={styles.profileBackOuter}>
-                <TouchableOpacity style={styles.backIcon} onPress={() => navigation.navigate('HomePage')}>
-                    <ChevronLeft/>
-                </TouchableOpacity>
-                <Text style={styles.profileHead}>Wallet</Text>
-              </View>
-              <View style={styles.imageSectionProfile}>
-                <View style={styles.ProfileimageIconer}>
-                    <Image source={{uri: apiUrl + fetchedUserData?.profile_img}} style={styles.profileImageTop}/>
-                    <Text style={styles.nameSec}>{fetchedUserData?.name}</Text>
-                    {/* <Text style={styles.nameSec}>{fetchedUserData?.email}</Text> */}
+            <View style={styles.TopProfileDisplay}>
+                <View style={styles.profileBackOuter}>
+                    <TouchableOpacity style={styles.backIcon} onPress={() => navigation.navigate('HomePage')}>
+                        <ChevronLeft/>
+                    </TouchableOpacity>
+                    <Text style={styles.profileHead}>Wallet</Text>
                 </View>
-              </View>
-          </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.innerScrollerProfile}>
-
-                <Modal isVisible={isModalVisible}>
-                    <View style={styles.modalSectionOuter2}>
-                        <View style={styles.modalCloseAbs}>
-                            <TouchableOpacity style={styles.modalCloser} onPress={toggleModal}>
-                                <CloseIcon/>
-                            </TouchableOpacity>
-                        </View>
-                        {isSuccessVisible ?
-                        <View>
-                            <LottieView 
-                                source={require('../../assets/Icon/check.json')}
-                                autoPlay
-                                style={{
-                                    width: 200,
-                                    height: 200,
-                                    marginLeft: 'auto',
-                                    marginRight: 'auto'
-                                }}
-                            />
-                            <Text style={styles.successModalHeader}>Payment Success</Text>
-                            <Text style={styles.SuccesswalletInputText}>Your money has been successfully added to the walley</Text>    
-                            <Text style={styles.WalletSucAmt}>₹{activePackage?.amount}</Text>
-                            <View style={styles.submitbtn2}>
-                                {/* <TouchableOpacity style={styles.signinbtn} onPress={initiatePayment}>
-                                    <Text style={styles.signinnertwo}>Okay Lets Go</Text>
-                                </TouchableOpacity>       */}
-                                <TouchableOpacity style={styles.signinbtn} onPress={() => {setModalVisible(false) ; setIsSuccessVisible(false)}}>
-                                    <Text style={styles.signinnertwo}>Okay Lets Go</Text>
-                                </TouchableOpacity>      
+                <View style={styles.imageSectionProfile}>
+                    <View style={styles.ProfileimageIconer}>
+                        <Image source={{uri: apiUrl + fetchedUserData?.profile_img}} style={styles.profileImageTop}/>
+                        <Text style={styles.nameSec}>{fetchedUserData?.name}</Text>
+                    </View>
+                </View>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.innerScrollerProfile}>
+                    <Modal isVisible={isSuccessVisible}>
+                        <View style={styles.modalSectionOuter2}>
+                            <View style={styles.modalCloseAbs}>
+                                <TouchableOpacity style={styles.modalCloser} >
+                                    <CloseIcon/>
+                                </TouchableOpacity>
                             </View>
-                        </View> :
-                        <View>
+                            <View>
+                                <LottieView 
+                                    source={require('../../assets/Icon/check.json')}
+                                    autoPlay
+                                    style={{
+                                        width: 200,
+                                        height: 200,
+                                        marginLeft: 'auto',
+                                        marginRight: 'auto'
+                                    }}
+                                />
+                                <Text style={styles.successModalHeader}>Payment Success</Text>
+                                <Text style={styles.SuccesswalletInputText}>Your money has been successfully added to the walley</Text>    
+                                <Text style={styles.WalletSucAmt}>₹{activePackage?.amount}</Text>
+                                <View style={styles.submitbtn2}>
+                                    <TouchableOpacity style={styles.signinbtn} onPress={() => {setModalVisible(false) ; setIsSuccessVisible(false)}}>
+                                        <Text style={styles.signinnertwo}>Okay Lets Go</Text>
+                                    </TouchableOpacity>      
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                    <Modal isVisible={paymentLoader}>
+                        <View style={styles.innerModal}>
+                            <View style={styles.innerLoading}>
+                                <ActivityIndicator size={'large'} color={ColorsTheme.Primary}/>
+                                <Text style={styles.accountReg}>Please Wait</Text>
+                            </View>
+                        </View>
+                    </Modal>
+                   {isModalVisible ? 
+                    <View style={styles.WalletSecond}>
                             <Text style={styles.modalHeader}>Select Amount</Text>
-                            <Text style={styles.walletInputText}>Select Amount to Add to Wallet</Text>
                             <View style={styles.groupWalletSelectors}>
                                 {amountPackages.map((items , index) => {
                                     return (
-                                        <TouchableOpacity style={[styles.singleWalletSelector , {backgroundColor: activePackage?.title === items.title ? ColorsTheme.Primary : ColorsTheme.White , borderColor:activePackage?.title === items.title ? ColorsTheme.Primary : ColorsTheme.borderColor,}]} key={index} onPress={() => setActivePackage(items)}>
+                                        <TouchableOpacity style={[styles.singleWalletSelector , {elevation: activePackage?.title === items.title ? 10 : 0 , backgroundColor: activePackage?.title === items.title ? ColorsTheme.Primary : ColorsTheme.White , borderColor:activePackage?.title === items.title ? ColorsTheme.Primary : ColorsTheme.borderColor,}]} key={index} onPress={() => setActivePackage(items)}>
                                             <View style={styles.flexPlans}>
                                                 <Text style={[styles.singleSelectText , {color: activePackage?.title === items.title ? ColorsTheme.White : ColorsTheme.Black}]}>{items.title}</Text>
-                                                <Text style={[styles.planText , {color: activePackage?.title === items.title ? ColorsTheme.White : ColorsTheme.Black,}]}>{items.validity} Plan</Text>
+                                                <Text style={[styles.planText , {color: activePackage?.title === items.title ? ColorsTheme.White : ColorsTheme.Black,}]}>{items.validity}</Text>
+                                            </View>
+                                            <View style={[styles.bottomTextOfferPrice , {borderTopColor: activePackage?.title === items.title ? ColorsTheme.White : ColorsTheme.borderColor }]}>
+                                                <Text style={[styles.planText2 , {color: activePackage?.title === items.title ? ColorsTheme.White : ColorsTheme.Black,}]}>*Offer Price</Text>
+                                                <Text style={[styles.singleSelectText2 , {color: activePackage?.title === items.title ? ColorsTheme.White : ColorsTheme.Black}]}>{items.actualTitle}</Text>
                                             </View>
                                             {activePackage?.title === items.title ? <View style={styles.absCheker}>
                                                 <CheckMark/>
@@ -715,55 +787,57 @@ const WalletScreen = ({route}) => {
                                 })}
                             </View>
                             <Text style={styles.selectedPlan}>
-                                <Text style={styles.boldText}>Note:</Text> You have Selected {activePackage?.title} Plan which is valid for an {activePackage?.validity}.
+                                <Text style={styles.boldText}>Note:</Text> You have Selected {activePackage?.actualTitle} Plan which is valid for {activePackage?.validity}.
                             </Text>
-                            <Text style={styles.walletInputText2}>50% Cashback Guarantee . We are using razorpay payment gateway. it will take 2-3 minutes to update the wallet balance , Terms & Conditions Apply</Text>    
-                            <View style={styles.submitbtn}>
+                            <Text style={styles.walletInputText2}>50% Cashback , *Terms & Conditions Apply</Text>    
+                            {/* <View style={styles.submitbtn}>
                                 <TouchableOpacity style={styles.signinbtn} onPress={createOrderHandler}>
                                     <Text style={styles.signinnertwo}>Add Money</Text>
                                 </TouchableOpacity>      
-                                {/* <TouchableOpacity style={styles.signinbtn} onPress={() => setIsSuccessVisible(true)}>
-                                    <Text style={styles.signinnertwo}>Add Money</Text>
-                                </TouchableOpacity>       */}
-                            </View>
-                        </View>
-                         }
+                            </View> */}
+                    </View> :
+                    <View style={styles.WalletFirst}>
+                     <View style={styles.walBalOut}>
+                         <Text style={styles.walletBalHead}>Wallet Balance</Text>
+                         <Text style={styles.walletBalText}>Rs. {fetchedUserData?.wallet?.balance ? fetchedUserData?.wallet?.balance : '0.00'}</Text>
+                     </View>
+                     <View style={styles.borderDiver}></View>
+                     <View style={styles.lastAddedServSec}>
+                         <View style={styles.leftServicesBlk}>
+                             <Image source={ImagesThemes.calandarIcon} style={styles.nofServicesicons} />
+                             <Text style={styles.noofServTop}>Last Added on</Text>
+                             {fetchedUserData?.wallet?.updated_at ? 
+                                 <Text style={styles.noofServBold}>{formatDate(fetchedUserData?.wallet?.updated_at)}</Text> : 
+                                 <Text style={styles.noofServBold}>Not Yet Added</Text>
+                             }
+                         </View>
+                         {/* <View style={styles.leftServicesBlk}>
+                             <Image source={ImagesThemes.noServ} style={styles.nofServicesicons} />
+                             <Text style={styles.noofServTop}>No of Payents</Text>
+                             <Text style={styles.noofServBold}>13 Transactions</Text>
+                         </View> */}
+                     </View>
                     </View>
-                </Modal>
-                <Modal isVisible={paymentLoader}>
-                    <View style={styles.innerModal}>
-                        <View style={styles.innerLoading}>
-                            <ActivityIndicator size={'large'} color={ColorsTheme.Primary}/>
-                            <Text style={styles.accountReg}>Please Wait</Text>
-                        </View>
-                    </View>
-                </Modal>
-                <Text style={styles.walletBalHead}>Wallet Balance</Text>
-                <Text style={styles.walletBalText}>Rs. {fetchedUserData?.wallet?.balance ? fetchedUserData?.wallet?.balance : '0.00'}</Text>
-                <View style={styles.borderDiver}></View>
-                <View style={styles.lastAddedServSec}>
-                    <View style={styles.leftServicesBlk}>
-                        <Image source={ImagesThemes.calandarIcon} style={styles.nofServicesicons} />
-                        <Text style={styles.noofServTop}>Last Added on</Text>
-                        {fetchedUserData?.wallet?.updated_at ? 
-                            <Text style={styles.noofServBold}>{formatDate(fetchedUserData?.wallet?.updated_at)}</Text> : 
-                            <Text style={styles.noofServBold}>Not Yet Added</Text>
-                        }
-                    </View>
-                    {/* <View style={styles.leftServicesBlk}>
-                        <Image source={ImagesThemes.noServ} style={styles.nofServicesicons} />
-                        <Text style={styles.noofServTop}>No of Payents</Text>
-                        <Text style={styles.noofServBold}>13 Transactions</Text>
-                    </View> */}
+                    }
                 </View>
-
-                <View style={styles.submitbtn}>
-                    <TouchableOpacity style={styles.signinbtn} onPress={() => setModalVisible(true)}>
-                        <Text style={styles.signinnertwo}>Add Money</Text>
-                    </TouchableOpacity>      
-                </View>
+            </ScrollView>
+            <View style={styles.BottomWalletHandler}>
+                {isModalVisible ? 
+                    <View style={[styles.submitbtn , styles.addMoneyButtonNew2]}>
+                        <TouchableOpacity style={ styles.backBtn} onPress={() => setModalVisible(false)}>
+                            <Text style={styles.backBtnText}>Back</Text>
+                        </TouchableOpacity>      
+                        <TouchableOpacity style={styles.paynowBtn} onPress={createOrderHandler}>
+                            <Text style={styles.payBtnText}>Pay Now</Text>
+                        </TouchableOpacity>
+                    </View> : 
+                    <View style={[styles.submitbtn , styles.addMoneyButtonNew]}>
+                        <TouchableOpacity style={[styles.signinbtn , styles.addMoneyBtn]} onPress={() => setModalVisible(true)}>
+                            <Text style={styles.signinnertwo}>Add Money</Text>
+                        </TouchableOpacity>      
+                    </View>
+                }
             </View>
-          </ScrollView>
         </View>
       )
 }

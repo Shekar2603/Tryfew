@@ -244,7 +244,7 @@ const TransactionHistory = () => {
   return (
     <View style={styles.containerForTopNav}>
         <View style={reusableStyles.topHeadNavigation}>
-            <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
+            <TouchableOpacity onPress={() => navigation.navigate('HomePage')}>
                 {/* <Ionicons name='arrow-back' style={reusableStyles.backwardIcon}></Ionicons> */}
                 <LeftIcon/>
             </TouchableOpacity>

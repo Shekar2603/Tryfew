@@ -146,7 +146,7 @@ export default function TermsAndConditions() {
   return (
     <View style={styles.conatinerForTopNav}>
       <View style={styles.topHeadNavigation}>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
                 <LeftArrow/>
             </TouchableOpacity>
             <Text style={styles.topNavmiddleText}>Terms and Conditions</Text>
@@ -173,7 +173,7 @@ export default function TermsAndConditions() {
             <TouchableOpacity style={styles.declineBtn} onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.declineBtnText}>Decline</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.acceptBtn} onPress={() => navigation.navigate('Tellusyourself')}>
+            <TouchableOpacity style={styles.acceptBtn} onPress={() => navigation.navigate('MoreAboutYou')}>
                 <Text style={styles.acceptBtnText}>Accept</Text>
             </TouchableOpacity>
       </View>
