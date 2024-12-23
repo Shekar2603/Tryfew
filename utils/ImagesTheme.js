@@ -1,12 +1,14 @@
 const ImagesThemes = {
     WelcomeBg : require('../assets/welcomebackground.png'),
-    ServiceProvider: require('../assets/service-provider-image.png'),
-    SalesProvider: require('../assets/sales-provider.png'),
+    ServiceProvider: require('../assets/service-provider-image.jpg'),
+    SalesProvider: require('../assets/sales-provider.jpg'),
     arrow: require('../assets/arrow-orange.png'),
-    cspService: require('../assets/csp-services.png'),
-    userService: require('../assets/user-services.png'),    
+    cspService: require('../assets/csp-services.jpg'),
+    userService: require('../assets/user-services.jpg'),    
     logo:require('../assets/logo.png'),
-    sliderImage: require('../assets/slide-1-image.png'),
+    sliderImage: require('../assets/slide-1-image.jpg'),
+    sliderImage2: require('../assets/slide-2-image.jpg'),
+    sliderImage3: require('../assets/slide-3-image.jpg'),
 
     // login-page-images
     userIcon: require('../assets/user-input.png'),

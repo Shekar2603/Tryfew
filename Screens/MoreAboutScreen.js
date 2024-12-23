@@ -41,7 +41,8 @@ export default function MoreAboutScreen() {
 
 
     // New DropDown SetStates
-    const [nameEnter , setNameEnter] = useState('')
+    const [nameEnter , setNameEnter] = useState('');
+    const [numberEnter , setNumberEnter] = useState('');
     const [genderSelect , setGenderSelect] = useState('');
     const [serviceSelect , setServiceSelect] = useState('');
     const [categorySelect , setCategorySelect] = useState('');
@@ -269,6 +270,7 @@ export default function MoreAboutScreen() {
     
            const detailForm = new FormData();
             detailForm.append('name' , nameEnter);
+            detailForm.append('phone' , numberEnter);
             detailForm.append('gender' , genderSelect);
             detailForm.append('service_type' , serviceSelect);
             detailForm.append('service_category' , categorySelect);
@@ -307,6 +309,7 @@ export default function MoreAboutScreen() {
                 .then(response => {
                     console.log('res:', response)
                     if(response?.data) {
+                        console.log('res:', response)
                         setSuccessLoader(true)
                         setLoaderVisible(false);
                         navigation.navigate('SuccessFullRegist')
@@ -638,6 +641,7 @@ export default function MoreAboutScreen() {
         <Text style={styles.tellaboutHead}>Tell us about yourself</Text>
         <View style={styles.allInputsOuter}>
             <TextInput placeholder='Enter your name' style={styles.nameInput} placeholderTextColor={ColorsTheme.Black} onChangeText={text => setNameEnter(text)} />
+            <TextInput placeholder='Enter Mobile Number' keyboardType='numeric' maxLength={10} style={styles.nameInput} placeholderTextColor={ColorsTheme.Black} onChangeText={text => setNumberEnter(text)} />
             <View style={styles.uploadphotosOuter}>
                 <View style={styles.uploadProfileTopSec}>
                     <Text style={styles.photoUpHead}>Upload your profile pic</Text>

@@ -11,6 +11,7 @@ import ImagesThemes from '../utils/ImagesTheme';
 
 // Svg Images Export
 import RightIcon from '../assets/svgs/right-arrow.svg'
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -87,6 +88,7 @@ export default function WelcomeScreen() {
     },
     wrapperhome: {
       height: 350,
+      minHeight: 350
     },
     sliderImages: {
       width: "100%",
@@ -97,9 +99,11 @@ export default function WelcomeScreen() {
     },
     dot: {
       // marginBottom: 20
+      marginBottom: 20
     },
     activeDot: {
       width: 30,
+      marginBottom: 20
     },
     bottomAlready: {
       flexDirection: "row",
@@ -168,13 +172,22 @@ export default function WelcomeScreen() {
       alignItems: "center",
       flexWrap: "wrap",
       justifyContent: 'space-between',
-      padding: 15,
-      rowGap: 10
+      paddingHorizontal: 15,
+      paddingBottom: 30,
+      paddinTop: 15,
+      rowGap: 10,
+      marginTop: 20
     },
     topLogoImage: {
         width: 100,
         objectFit: "contain",
         height: 60
+    },
+    welcomeSingleImage: {
+      width: '100%',
+      // maxHeight: 150,
+      // height: '100%'
+      height: 120
     }
   });
 
@@ -185,48 +198,44 @@ export default function WelcomeScreen() {
         </View>
         <View style={styles.TopLogo}>
           <Image source={ImagesThemes.logo} style={styles.topLogoImage} />
-          {/* <Svg style={{width: 100 , height: 40}}>
-            <SvgImage href={require('../assets/svglogo.svg')}/>
-          </Svg> */}
         </View>
-        <Swiper
-          style={styles.wrapperhome}
-          autoplay={true}
-          autoplayTimeout={5}
-          loop={true}
-          activeDotColor={ColorsTheme.Primary}
-          dotColor={ColorsTheme.Primary}
-          dotStyle={styles.dot}
-          activeDotStyle={styles.activeDot}
-        >
-          <Image source={ImagesThemes.sliderImage} style={styles.sliderImages} />
-          <Image source={ImagesThemes.sliderImage} style={styles.sliderImages} />
-          <Image source={ImagesThemes.sliderImage} style={styles.sliderImages} />
-        </Swiper>
-        <View style={styles.mainCardsOuter}>
-            {welcomeCards.map((items , index) => {
-                return (
-                    <View style={styles.singleViewCard} key={index}>
-                        <Image source={items.image} style={{width: '100%'}} resizeMode='cover'/>
-                        <TouchableOpacity style={styles.bottomCardDet} onPress={() => navigation.navigate('Login')}>
-                            <View style={styles.cardTextOut}>
-                                <Text style={styles.primaryOrangeText}>{items.primaryText}</Text>
-                               {items.secondaryText ? <Text style={styles.secondaryBlackText}>{items.secondaryText}</Text> : null } 
-                                { items.thirdText ? <Text style={styles.thirdsmall}>{items.thirdText}</Text> : null}
-                            </View>
-                            <View style={styles.forwardIcon}>
-                                <RightIcon/>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                )
-            })}
-        </View>
-        <View style={styles.bottomAlready}>
-            <Text style={styles.alreadyText}>Register Account ?</Text> 
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}><Text style={styles.loginbuttontext}>Sign Up</Text></TouchableOpacity>
-        </View>
-      {/* <Text style={styles.topText}>WelcomeScreen</Text> */}
+        <ScrollView style={{flex: 1, height: '100%'}} showsVerticalScrollIndicator={false}>
+          <Swiper
+            style={styles.wrapperhome}
+            autoplay={true}
+            autoplayTimeout={5}
+            loop={true}
+            // activeDotColor={ColorsTheme.Primary}
+            // dotColor={ColorsTheme.Primary}
+            // dotStyle={styles.dot}
+            // activeDotStyle={styles.activeDot}
+            dot={false}
+            showsPagination={false}
+          >
+            <Image source={ImagesThemes.sliderImage} style={styles.sliderImages} />
+            <Image source={ImagesThemes.sliderImage2} style={styles.sliderImages} />
+            <Image source={ImagesThemes.sliderImage3} style={styles.sliderImages} />
+          </Swiper>
+          <View style={styles.mainCardsOuter}>
+              {welcomeCards.map((items , index) => {
+                  return (
+                      <View style={styles.singleViewCard} key={index}>
+                          <Image source={items.image} style={styles.welcomeSingleImage} resizeMode='cover'/>
+                          <TouchableOpacity style={styles.bottomCardDet} onPress={() => navigation.navigate('Login')}>
+                              <View style={styles.cardTextOut}>
+                                  <Text style={styles.primaryOrangeText}>{items.primaryText}</Text>
+                                {items.secondaryText ? <Text style={styles.secondaryBlackText}>{items.secondaryText}</Text> : null } 
+                                  { items.thirdText ? <Text style={styles.thirdsmall}>{items.thirdText}</Text> : null}
+                              </View>
+                              <View style={styles.forwardIcon}>
+                                  <RightIcon/>
+                              </View>
+                          </TouchableOpacity>
+                      </View>
+                  )
+              })}
+          </View>
+        </ScrollView>
     </View>
   )
 }

@@ -100,7 +100,7 @@ const getData = (toked) => {
       getUserDetails();
       navigation.addListener('focus', () => {
         getUserDetails();
-    });
+      });
   }, [navigation])
 
 

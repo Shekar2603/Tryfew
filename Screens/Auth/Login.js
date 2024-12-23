@@ -63,19 +63,19 @@ const userLogin = async (values , {resetForm}) => {
 
     setLoaderVisible(true)
     try {
-        await fetch(`${apiUrl}api/captain/login`, {
+        await fetch(`${apiUrl}api/captain/sign-up`, {
             method: 'post',  
             body: formData,
         })
         .then((response) => response.json())
         .then(response => {
-            console.log(response)
+            // console.log(response)
 
-            if(response?.data?.token) {
+            if(response?.token) {
                 setLoaderVisible(false)
-                AsyncStorage.setItem('userInfo', JSON.stringify(response?.data?.token));
-                AsyncStorage.setItem('loggedData' , JSON.stringify(response?.data))
-                if(response?.data?.tell_me_about_yourself === true) {
+                AsyncStorage.setItem('userInfo', JSON.stringify(response?.token));
+                AsyncStorage.setItem('loggedData' , JSON.stringify(response))
+                if(response?.tell_me_about_yourself === true) {
                     navigation.navigate('HomePage') 
                 }else {
                     navigation.navigate('TermsConditions')
@@ -86,7 +86,7 @@ const userLogin = async (values , {resetForm}) => {
                 setLoaderVisible(false)
                 ToastAndroid.show('Invalid Credentials' , ToastAndroid.LONG);
             }
-            else if (response?.data?.error) {
+            else if (response?.error) {
                 setLoaderVisible(false)
                 ToastAndroid.show('Invalid Credentials' , ToastAndroid.LONG);
             }
@@ -399,8 +399,7 @@ const checkLoggedUserLogin = async () => {
             </Formik>
         </ScrollView>
         <View style={styles.bottomAlready}>
-            <Text style={styles.alreadyText}>Don't have an account</Text> 
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}><Text style={styles.loginbuttontext}>Sign Up</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}><Text style={styles.loginbuttontext}>Forgot Password ?</Text></TouchableOpacity>
         </View>  
     </View>
   )

@@ -17,6 +17,7 @@ import TransactionHistory from '../ProfileFlowScreens/TransactionHistory';
 import { NavigationContainer } from '@react-navigation/native';
 import PreWelcomeScreen from '../PreWelcomeScreen';
 import MoreAboutScreen from '../MoreAboutScreen';
+import ForgotPassword from '../Auth/ForgotPassword';
 
 
 const Drawer = createDrawerNavigator()
@@ -49,6 +50,13 @@ export default function MainNavigation() {
         <Drawer.Screen
             name='Login'
             component={Login}
+            options={{
+                header : () =>  null
+            }}
+          />
+        <Drawer.Screen
+            name='ForgotPassword'
+            component={ForgotPassword}
             options={{
                 header : () =>  null
             }}
